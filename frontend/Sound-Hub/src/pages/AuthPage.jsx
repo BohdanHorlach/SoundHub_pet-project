@@ -1,22 +1,36 @@
-import { Card, CardBody, List, ListItem, ListItemPrefix, Typography } from "@material-tailwind/react";
-import SafeArea from "../components/SafeArea";
-
-
-function AuthType({ text, icon }) {
-  return (
-    <ListItem ripple={false} className="flex flex-row justify-center gap-2 m-2 rounded-2xl border border-gray-600 shadow-lg">
-      <ListItemPrefix className="max-w-[12.5%] m-0">
-        <img src={icon} />
-      </ListItemPrefix>
-      <Typography variant="lead" className="flex justify-center">
-        {text}
-      </Typography>
-    </ListItem>
-  );
-}
+import { Card, CardBody, List, Typography } from "@material-tailwind/react";
+import { getRedirectResult, signInWithPopup } from "firebase/auth";
+import SafeArea from "../components/base/SafeArea";
+import AuthType from "../components/auth/AuthType";
+import { auth } from "../firebase/firebase-config";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import providers from "../firebase/provides";
 
 
 export default function AuthPage() {
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const baseDescription = "Sign in with ";
+
+
+  const handleSignIn = async (provider) => {
+    try {
+      const result = await signInWithPopup(auth, provider.instance);
+
+      if (result)
+        navigate("/");
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const credential = provider.class.credentialFromError?.(error);
+
+      console.error("Auth error:", errorCode, errorMessage, credential);
+      setError(errorMessage);
+    }
+  };
+
+
   return (
     <SafeArea className="min-h-screen flex flex-col items-center justify-center bg-background">
       <Card color="white" variant="gradient" className="w-96 shadow-xl rounded-3xl py-10">
@@ -25,11 +39,22 @@ export default function AuthPage() {
             Sign up / Sign in
           </Typography>
           <List className="items-center">
-            <AuthType text="Sign in with Google" icon="icons/google_icon.svg" />
-            <AuthType text="Sign in with Facebook" icon="icons/facebook_icon.svg" />
+            {Object.entries(providers).map(([key, provider]) => (
+              <AuthType
+                key={key}
+                text={baseDescription + provider.name}
+                icon={provider.icon}
+                onClick={() => handleSignIn(provider)}
+              />
+            ))}
           </List>
         </CardBody>
       </Card>
+      {error && (
+        <Typography variant="lead" color="red" className="mt-10">
+          {error}
+        </Typography>
+      )}
     </SafeArea>
   );
 }

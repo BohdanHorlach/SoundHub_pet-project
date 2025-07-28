@@ -1,5 +1,5 @@
-import SafeArea from '../components/SafeArea';
-import Header from '../components/Header'
+import SafeArea from '../components/base/SafeArea';
+import Header from '../components/base/Header'
 import CardList from '../components/card/CardList';
 
 

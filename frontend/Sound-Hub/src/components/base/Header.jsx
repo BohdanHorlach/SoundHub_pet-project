@@ -1,16 +1,15 @@
 import { Typography, Button, Navbar, IconButton, Drawer } from "@material-tailwind/react";
 import SafeArea from "./SafeArea";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase-config";
-import NavList from "./navbar/NavList";
+import NavList from "../navbar/NavList";
+import { useAuth } from "../auth/AuthProvider";
 
 const WITH_THRESHOLD = 960;
 
 
 export default function Header() {
-    const [user, setUser] = useState(null);
+    const { user, loading } = useAuth();
     const [isOpenNav, setOpenNav] = useState(false);
     const navigate = useNavigate();
 
@@ -22,11 +21,9 @@ export default function Header() {
 
     useEffect(() => {
         window.addEventListener("resize", handleResize);
-        const unsubscribe = onAuthStateChanged(auth, setUser);
 
         return () => {
             window.removeEventListener("resize", handleResize);
-            unsubscribe();
         };
     }, []);
 
@@ -36,6 +33,8 @@ export default function Header() {
     };
 
     const closeDrawer = () => setOpenNav(false);
+
+    if (loading) return <></>;
 
     return (
         <>
@@ -54,7 +53,9 @@ export default function Header() {
                             <div>
                                 {user ? (
                                     <div>
-                                        <div className="hidden lg:block">{NavList}</div>
+                                        <div className="hidden lg:block">
+                                            <NavList />
+                                        </div>
                                         <IconButton
                                             title="Toggle navigation"
                                             variant="text"
@@ -115,7 +116,7 @@ export default function Header() {
                 <Navbar>
                     {user ? (
                         <div className="block lg:hidden">
-                            <div>{NavList}</div>
+                            <NavList />
                         </div>
                     ) : (
                         <Typography color="red">
