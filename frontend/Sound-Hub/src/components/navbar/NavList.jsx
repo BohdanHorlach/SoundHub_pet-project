@@ -1,6 +1,6 @@
 import { Typography, Button } from "@material-tailwind/react";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/firebase-config";
+import { auth } from "../../utils/firebase/firebase-config";
 
 export default function NavList() {
   const handleLogout = () => {

@@ -9,7 +9,7 @@ const WITH_THRESHOLD = 960;
 
 
 export default function Header() {
-    const { user, loading } = useAuth();
+    const { isAuth } = useAuth();
     const [isOpenNav, setOpenNav] = useState(false);
     const navigate = useNavigate();
 
@@ -34,8 +34,6 @@ export default function Header() {
 
     const closeDrawer = () => setOpenNav(false);
 
-    if (loading) return <></>;
-
     return (
         <>
             <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none p-0 py-2">
@@ -51,7 +49,7 @@ export default function Header() {
                         </Typography>
                         <div className="flex items-center gap-4">
                             <div>
-                                {user ? (
+                                {isAuth ? (
                                     <div>
                                         <div className="hidden lg:block">
                                             <NavList />
@@ -114,7 +112,7 @@ export default function Header() {
                 overlay={true}
                 overlayProps={{ className: "fixed inset-0 bg-black/50 backdrop-blur-sm z-50" }}>
                 <Navbar>
-                    {user ? (
+                    {isAuth ? (
                         <div className="block lg:hidden">
                             <NavList />
                         </div>

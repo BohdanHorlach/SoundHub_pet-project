@@ -1,46 +1,42 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const sequelize = require('./db');
 const router = require('./router/index');
-const middleware = require('./middlewares/middleware');
-const PORT = process.env.PORT;
-
+const exeptionTracker = require('./middlewares/exeption-tracker');
+const { initDB } = require('./models');
+const { tempFileCleaner } = require('./config/temp-file-cleaner-config');
 
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());
 
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
-app.use('/api', router);
-app.use(middleware); //errors proccessing
-
-
 //request log
 app.use((req, res, next) => {
-  console.log('Incoming request:', req.method, req.url);
-  console.log('Authorization header:', req.headers['authorization']);
+  console.log(`\n[${new Date().toISOString()}] Incoming request: `, req.method, req.url);
   next();
 });
+app.use('/api', router);
+app.use(exeptionTracker); //errors proccessing
 
 
-const start = async () => {
-    try {
-        await sequelize.sync({ force: false });
-        console.log('Database synchronized.');
-
-        app.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`))
-    } catch (error) {
-        console.log(error);
-    }
-}
+initDB(app);
+tempFileCleaner.start();
 
 
-start();
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+  process.exit(1);
+});
+
+process.on('SIGINT', () => {
+  console.log('Shutting down...');
+  tempFileCleaner.stop();
+  process.exit();
+});

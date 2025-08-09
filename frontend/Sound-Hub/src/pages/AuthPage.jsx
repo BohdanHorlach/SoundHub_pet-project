@@ -1,11 +1,11 @@
 import { Card, CardBody, List, Typography } from "@material-tailwind/react";
-import { getRedirectResult, signInWithPopup } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import SafeArea from "../components/base/SafeArea";
 import AuthType from "../components/auth/AuthType";
-import { auth } from "../firebase/firebase-config";
+import { auth } from "../utils/firebase/firebase-config";
+import providers from "../utils/firebase/provides";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import providers from "../firebase/provides";
 
 
 export default function AuthPage() {

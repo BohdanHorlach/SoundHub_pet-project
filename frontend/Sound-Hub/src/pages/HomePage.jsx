@@ -1,6 +1,7 @@
 import SafeArea from '../components/base/SafeArea';
 import Header from '../components/base/Header'
 import CardList from '../components/card/CardList';
+import AudioUploadForm from '../components/AudioUploadForm';
 
 
 export default function HomePage() {
@@ -8,7 +9,7 @@ export default function HomePage() {
     <>
       <Header />
       <SafeArea className="xl:py-12 lg:py-12 md:py-8 py-4 bg-background">
-        <CardList tracks={
+        {/*<CardList tracks={
           [
             {
               name: "guitar_sample0",
@@ -33,7 +34,8 @@ export default function HomePage() {
               url: "/temp/audio/guitar_sample.wav",
               categories: ["Default1", "Default2", "Default3", "Default4"],
               isFavorite: false
-            }]} />
+            }]} />*/}
+        <AudioUploadForm userId={1} />
       </SafeArea>
     </>
   );
