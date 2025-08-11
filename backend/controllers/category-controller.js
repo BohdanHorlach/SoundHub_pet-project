@@ -8,9 +8,7 @@ class CategoryController {
     }
     catch{
       console.error(error);
-      const status = error.status || 500;
-      const message = error.message || 'Server Error';
-      return res.status(status).json({ message });
+      return next(error);
     }
   }
 }

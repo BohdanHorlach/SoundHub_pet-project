@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const router = require('./router/index');
+const router = require('./routes/index');
 const exeptionTracker = require('./middlewares/exeption-tracker');
 const { initDB } = require('./models');
 const { tempFileCleaner } = require('./config/temp-file-cleaner-config');

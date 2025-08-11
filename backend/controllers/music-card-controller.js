@@ -1,3 +1,4 @@
+const MusicCardStatus = require("../enums/music-card-status");
 const { BadRequest, UnenspectedError } = require("../exceptions/api-errors");
 const musicCardService = require("../services/music-card-service");
 
@@ -10,53 +11,38 @@ class MusicCardController {
     this.uploadCard = this.uploadCard.bind(this);
   }
 
-  #parseSearchParams(body) {
-    const { page = 1, limit = 9, categories = "[]" } = body;
+  #parseSearchParams(query) {
+    const { page = 1, limit = 9, categories = "[]", status = MusicCardStatus.APPROVED } = query;
     const parsedCategories = JSON.parse(categories);
-    return { page, limit, parsedCategories };
+    return { page, limit, parsedCategories, status };
   }
 
 
-  #handleError(res, error) {
-    console.error(error);
-    const status = error.status || 500;
-    const message = error.message || 'Server Error';
-    return res.status(status).json({ message });
-  }
-
-
-  async #handleSearchRequest(req, res, serviceMethod) {
+  async #handleSearchRequest(req, res, next, serviceMethod) {
     try {
       const userId = req.user.userId;
-      const params = this.#parseSearchParams(req.body);
+      const params = this.#parseSearchParams(req.query);
       const data = await serviceMethod.call(musicCardService, userId, params);
 
       return res.status(200).json(data);
     } catch (error) {
-      return handleError(res, error);
+      next(error);
     }
   }
 
 
-  getFavorites(req, res) {
-    return this.#handleSearchRequest(req, res, musicCardService.getFavorites);
+  getFavorites(req, res, next) {
+    return this.#handleSearchRequest(req, res, next, musicCardService.getFavorites);
   }
 
   
-  getUploads(req, res) {
-    return this.#handleSearchRequest(req, res, musicCardService.getUploads);
+  getUploads(req, res, next) {
+    return this.#handleSearchRequest(req, res, next, musicCardService.getUploads);
   }
 
 
   async getAll(req, res, next) {
-    try {
-      const params = this.#parseSearchParams(req.body);
-      const data = await musicCardService.getAll(params);
-
-      return res.status(200).json(data);
-    } catch (error) {
-      return this.#handleError(res, error);
-    }
+    return this.#handleSearchRequest(req, res, next, musicCardService.getAll);
   }
 
 
@@ -81,14 +67,13 @@ class MusicCardController {
   async update(req, res, next) {
     try {
       const { id } = req.params;
-
       if(!id)
         return next(BadRequest("No id provided"));
 
-      const updatedCard = musicCardService.update(id, req.body);
+      const updatedCard = await musicCardService.update(id, req.body);
       return res.status(202).json({ message: "Update successfully", card: updatedCard });
     } catch (error) {
-      console.error(err);
+      console.error(error);
       next(UnenspectedError("Update failed"));
     }
   }

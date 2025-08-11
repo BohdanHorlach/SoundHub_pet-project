@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Category, MusicCard, User } = require("../models");
+const { Category, MusicCard, User, Favorite } = require("../models");
 const MusicCardDTO = require("../dtos/music-card-dto");
 const path = require('path');
 const audioConverter = require("../utils/audio-converter");
@@ -20,13 +20,14 @@ class MusicCardService {
   }
 
 
-  #getSearchQuery({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [] }) {
+  #getSearchQuery({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
     limit = this.#validateLimit(limit);
     
     const offset = (page - 1) * limit;
     const categoryFilter = {
       model: Category,
       as: 'categories',
+      attributes: ['id', 'name'],
       through: { attributes: [] },
     };
     
@@ -38,6 +39,7 @@ class MusicCardService {
       limit: Number(limit),
       offset: Number(offset),
       order: [['createdAt', 'DESC']],
+      where: { status: status },
       include: [categoryFilter]
     };
 
@@ -45,10 +47,20 @@ class MusicCardService {
   }
 
 
-  async #findAndCountAll(baseQuery) {
+  async #findAndCountAll(baseQuery, userId) {
     const { rows, count } = await MusicCard.findAndCountAll(baseQuery);
     const limit = this.#validateLimit(baseQuery.limit);
-    const cards = rows.map(musicCard => new MusicCardDTO(musicCard));
+
+    const favorites = await Favorite.findAll({
+      where: { userId: userId },
+      attributes: ["musicCardId"],
+      raw: true
+    });
+    const favoriteIds = favorites.map(f => f.musicCardId);
+
+    const cards = rows.map(musicCard =>
+      new MusicCardDTO(musicCard, favoriteIds.includes(musicCard.id))
+    );
   
     return {
       cards,
@@ -60,12 +72,10 @@ class MusicCardService {
 
 
   async #setCategories(musicCard, categories) {
-    const parsedCategories = JSON.parse(categories);
-
-    if (parsedCategories.length > 0) {
+    if (categories.length > 0) {
       const foundCategories = await Category.findAll({
         where: {
-          id:  { [Op.in]: parsedCategories },
+          id:  { [Op.in]: categories },
         },
       });
   
@@ -76,6 +86,7 @@ class MusicCardService {
       include: [{
         model: Category,
         as: 'categories',
+        attributes: ['id', 'name'],
         through: { attributes: [] }
       }],
     });
@@ -95,8 +106,8 @@ class MusicCardService {
   }
 
 
-  async getFavorites(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [] }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, categories });
+  async getFavorites(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
+    const baseQuery = this.#getSearchQuery({ page, limit, categories, status });
  
     baseQuery.include.push({
       model: User,
@@ -105,22 +116,22 @@ class MusicCardService {
       through: { where: { userId: userId }, attributes: [] }
     });
   
-    return this.#findAndCountAll(baseQuery);
+    return this.#findAndCountAll(baseQuery, userId);
   }
 
 
-  async getUploads(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [] }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, categories });
+  async getUploads(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
+    const baseQuery = this.#getSearchQuery({ page, limit, categories, status });
   
     baseQuery.where = { authorId: userId };
   
-    return this.#findAndCountAll(baseQuery);
+    return this.#findAndCountAll(baseQuery, userId);
   }
 
 
-  async getAll({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [] }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, categories });
-    return this.#findAndCountAll(baseQuery);
+  async getAll(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
+    const baseQuery = this.#getSearchQuery({ page, limit, categories, status });
+    return this.#findAndCountAll(baseQuery, userId);
   }
 
 

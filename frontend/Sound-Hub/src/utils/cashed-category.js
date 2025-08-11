@@ -1,4 +1,4 @@
-import axiosInstance from "../utils/axios/axios-instance";
+import axiosInstance from "./axios/axios-instance";
 
 let cachedCategories = null;
 

@@ -8,7 +8,7 @@ const PORT = process.env.PORT;
 
 const initDB = async (app) => {
   try {
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('Database synchronized.');
 
     app.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`))

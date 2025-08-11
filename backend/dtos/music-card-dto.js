@@ -8,8 +8,10 @@ module.exports = class MusicCardDTO {
   status;
   authorId;
   categories;
+  isOnFavorite;
 
-  constructor(musicCard) {
+
+  constructor(musicCard, isOnFavorite = false) {
     if(!(musicCard instanceof MusicCard)) {
       throw BadRequest('Expected instance of User model');
     }
@@ -19,7 +21,8 @@ module.exports = class MusicCardDTO {
     this.audioUrl = musicCard.audioUrl;
     this.status = musicCard.status;
     this.authorId = musicCard.authorId;
-    
+    this.isOnFavorite = isOnFavorite;
+
     this.categories = musicCard.categories ?? [];
   }
 }

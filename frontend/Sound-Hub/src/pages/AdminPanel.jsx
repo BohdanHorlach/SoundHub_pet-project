@@ -3,9 +3,7 @@ import axiosInstance from "../utils/axios/axios-instance";
 import RequiredRole from "../components/auth/RequiredRole";
 import { useAuth } from "../components/auth/AuthProvider";
 import CardEditor from "../components/card/CardEditor";
-import WavesurferPlayer from "@wavesurfer/react";
-import { Button } from "@material-tailwind/react";
-import { PlayIcon, PauseIcon } from "@heroicons/react/24/outline";
+import { SoundWave, PlayButton, SoundWaveProvider } from "../components/card/SoundWave";
 
 
 export default function AdminPanel() {
@@ -13,14 +11,13 @@ export default function AdminPanel() {
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardLoaded, setLoading] = useState(true);
-  const [wavesurfer, setWavesurfer] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const editorRef = useRef();
+
 
   useEffect(() => {
     if (loading || !isAuth) return;
 
-    axiosInstance.get("/music", { params: { page: 1, limit: 30 } })
+    axiosInstance.get("/music", { params: { page: 1, limit: 30, status: "pending" } })
       .then(res => {
         const pendingCards = res.data.cards.filter(card => card.status === "pending");
         setCards(pendingCards);
@@ -31,41 +28,25 @@ export default function AdminPanel() {
   }, [isAuth, loading]);
 
 
-  const handleSave = async () => {
+  const handleUpdate = async (extraData = {}) => {
     if (!selectedCard || !editorRef.current) return;
+
     const updatedData = editorRef.current.getData();
+    const dataToSend = { ...updatedData, ...extraData };
 
     try {
-      await axiosInstance.post(`/music/${selectedCard.id}`, updatedData);
-      setCards(prev => prev.filter(c => c.id !== selectedCard.id));
-      setSelectedCard(null);
-    } catch (e) {
-      console.error("Update failed:", e);
+      await axiosInstance.post(`/music/${selectedCard.id}`, dataToSend, {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("Update failed:", error);
     }
   };
 
 
-  function onReady(ws) {
-    setWavesurfer(ws);
-    setIsPlaying(false);
-    setIsFavorite(isOnFavorite);
-  }
-
-
-  function onPlayPause() {
-    if (!wavesurfer)
-      return;
-
-    if (!isPlaying)
-      onPlay(wavesurfer);
-
-    wavesurfer.playPause();
-    setIsPlaying(!isPlaying);
-  }
-
-
   if (cardLoaded)
     return <div className="p-4">Load...</div>;
+
 
   return (
     <RequiredRole role="admin">
@@ -90,28 +71,10 @@ export default function AdminPanel() {
         <div className="flex-1 bg-white rounded-lg shadow-md p-6 overflow-y-auto">
           {selectedCard ? (
             <>
-              <WavesurferPlayer
-                height="auto"
-                waveColor="#0284c7"
-                progressColor="#94a3b8"
-                cursorWidth={5}
-                cursorColor="#6b7280"
-                barWidth={2.5}
-                barGap={2}
-                barRadius={15}
-                mediaControls={false}
-                url={selectedCard.audioUrl}
-                onReady={onReady}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-              />
-              <Button className="flex flex-grow justify-center" onClick={onPlayPause}>
-                {
-                  isPlaying
-                    ? <PauseIcon className="size-6 text-white" />
-                    : <PlayIcon className="size-6 text-white" />
-                }
-              </Button>
+              <SoundWaveProvider>
+                <SoundWave audioUrl={selectedCard.audioUrl} />
+                <PlayButton />
+              </SoundWaveProvider>
               <h2 className="text-xl font-bold mb-4">Edit card</h2>
               <CardEditor
                 key={selectedCard.id}
@@ -120,10 +83,18 @@ export default function AdminPanel() {
               />
               <div className="mt-4">
                 <button
-                  onClick={handleSave}
+                  onClick={() => { handleUpdate({ status: "approved" }) }}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   Save
+                </button>
+              </div>
+              <div className="mt-4">
+                <button
+                  onClick={() => { handleUpdate({ status: "rejected" }) }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Reject
                 </button>
               </div>
             </>

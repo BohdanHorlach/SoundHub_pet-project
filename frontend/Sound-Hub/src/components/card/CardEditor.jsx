@@ -1,5 +1,5 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from "react";
-import { getCategories } from "../../utils/cashedCategory";
+import { getCategories } from "../../utils/cashed-category";
 
 //random colors
 //TODO: create color palette to categories
@@ -21,8 +21,8 @@ const getShadowForCategory = (id) => {
 };
 
 const CardEditor = forwardRef(({ card }, ref) => {
-  const [title, setTitle] = useState(card.title ?? "");
-  const [selectedCategories, setSelectedCategories] = useState(card.categories.map((cat) => cat.id) ?? []);
+  const [title, setTitle] = useState(card?.title ?? "");
+  const [selectedCategories, setSelectedCategories] = useState(card?.categories?.map((cat) => cat.id) ?? []);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {

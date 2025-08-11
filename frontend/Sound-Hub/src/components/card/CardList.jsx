@@ -2,7 +2,7 @@ import MusicCard from "./MusicCard";
 import { useState } from "react";
 
 
-export default function CardList({ tracks }) {
+export default function CardList({ cards }) {
   const [activeWS, setActiveWS] = useState(null);
 
   const handlePlay = (ws) => {
@@ -15,13 +15,14 @@ export default function CardList({ tracks }) {
 
   return (
     <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full gap-4">
-      {tracks.map((track, i) => (
+      {cards.map((card, i) => (
         <MusicCard
           key={i}
-          sampleName={track.name}
-          sourceUrl={track.url}
-          categories={track.categories}
-          isOnFavorite={track.isFavorite}
+          cardId={card.id}
+          sampleName={card.title}
+          sourceUrl={card.audioUrl}
+          categories={card.categories}
+          isOnFavorite={card.isOnFavorite}
           onPlay={handlePlay}
         />
       ))}

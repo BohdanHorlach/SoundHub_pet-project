@@ -6,13 +6,16 @@ const categoryController = require("../controllers/category-controller");
 const { authMiddleware, roleMiddleware } = require('../middlewares/auth-middleware');
 const Roles = require('../enums/roles');
 const usersController = require('../controllers/users-controller');
+const favoriteController = require('../controllers/favorite-controller');
 
 
 router.get("/category", categoryController.getAll);
 router.get("/user", authMiddleware, usersController.getCurrentUser);
 
-router.get("/music", musicController.getAll);
+router.get("/music", authMiddleware, musicController.getAll);
 router.post("/music", authMiddleware, upload.single("audio"), musicController.uploadCard);
-router.post("/music/:id", authMiddleware, roleMiddleware(Roles.ADMIN), musicController.getAll);
+router.post("/music/:id", authMiddleware, roleMiddleware(Roles.ADMIN), musicController.update);
+
+router.post("/favorite/:id", authMiddleware, favoriteController.toggleFavorite);
 
 module.exports = router;
