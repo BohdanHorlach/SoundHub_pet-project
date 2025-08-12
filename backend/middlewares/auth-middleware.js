@@ -1,36 +1,27 @@
 const { admin } = require("../config/firebase-config");
 const UserDTO = require("../dtos/user-dto");
 const { UnauthorizedError, ForbiddenError } = require("../exceptions/api-errors");
+const { authenticateUserByToken } = require("../services/auth-service");
 const User = require("../models/user-model");
 
 
-const authMiddleware = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return next(UnauthorizedError(["Unauthorized: No token provided"]));
-  }
-
-  const token = authHeader.split(" ")[1];
-
+async function authMiddleware(req, res, next) {
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    const uid = decodedToken.uid;
-    let user = await User.findOne({ where: { firebaseUid: uid } });
-
-    if (!user) 
-    {
-      user = await User.create({ firebaseUid: uid, name: decodedToken.name || "Unnamed" });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next(UnauthorizedError(["Unauthorized: No token provided"]));
     }
 
-    req.user = new UserDTO(user);
-    console.log('User authenticated: ', req.user, '\n');
+    const token = authHeader.split(" ")[1];
+    req.user = await authenticateUserByToken(token);
+
+    console.log("User authenticated (HTTP):", req.user);
     next();
   } catch (error) {
-    console.error("Auth error:", error);
-    next(UnauthorizedError(["Unauthorized: Invalide token"]));
+    console.error("Auth error (HTTP):", error);
+    next(UnauthorizedError(["Unauthorized: Invalid token"]));
   }
-};
+}
 
 
 /**

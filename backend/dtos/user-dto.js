@@ -4,6 +4,7 @@ const User = require("../models/user-model");
 module.exports = class UserDTO {
     userId;
     name;
+    avatar;
     role;
 
     constructor(user){
@@ -13,6 +14,7 @@ module.exports = class UserDTO {
 
         this.userId = user.id;
         this.name = user.name;
+        this.avatar = user.avatar;
         this.role = user.role;
     }
 }

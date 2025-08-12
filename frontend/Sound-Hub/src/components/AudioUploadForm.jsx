@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import axiosInstance from "../utils/axios/axios-instance";
+import axiosInstance from "../utils/api/axios-instance";
 import { useAuth } from "../components/auth/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import CardEditor from "../components/card/CardEditor";

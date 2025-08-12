@@ -12,7 +12,7 @@ import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import CategoryList from "./CategoryList";
 import { useState } from "react";
 import { PlayButton, SoundWave, SoundWaveProvider } from "./SoundWave";
-import axiosInstance from "../../utils/axios/axios-instance";
+import axiosInstance from "../../utils/api/axios-instance";
 
 
 const FavoriteIcon = ({ isFavorite }) =>

@@ -5,6 +5,8 @@ const router = require('./routes/index');
 const exeptionTracker = require('./middlewares/exeption-tracker');
 const { initDB } = require('./models');
 const { tempFileCleaner } = require('./config/temp-file-cleaner-config');
+const initWebSocketServer = require('./ws/web-socket-server');
+
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.use(exeptionTracker); //errors proccessing
 
 
 initDB(app);
+initWebSocketServer(app);
 tempFileCleaner.start();
 
 

@@ -2,7 +2,7 @@ import MusicCard from "./MusicCard";
 import { useState } from "react";
 
 
-export default function CardList({ cards }) {
+export default function CardList({ cards = [] }) {
   const [activeWS, setActiveWS] = useState(null);
 
   const handlePlay = (ws) => {

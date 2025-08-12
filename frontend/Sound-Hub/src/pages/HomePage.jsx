@@ -3,7 +3,7 @@ import Header from '../components/base/Header'
 import CardList from '../components/card/CardList';
 import AudioUploadForm from '../components/AudioUploadForm';
 import { useEffect, useState } from 'react';
-import axiosInstance from '../utils/axios/axios-instance';
+import axiosInstance from '../utils/api/axios-instance';
 
 
 export default function HomePage() {

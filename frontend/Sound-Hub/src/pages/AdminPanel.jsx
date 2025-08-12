@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import axiosInstance from "../utils/axios/axios-instance";
+import axiosInstance from "../utils/api/axios-instance";
 import RequiredRole from "../components/auth/RequiredRole";
 import { useAuth } from "../components/auth/AuthProvider";
 import CardEditor from "../components/card/CardEditor";
 import { SoundWave, PlayButton, SoundWaveProvider } from "../components/card/SoundWave";
+import { Avatar } from "@material-tailwind/react";
+import useWebSocket from "../hooks/useWebScket";
+import useEditorsByCard from "../hooks/useEditorsByCard";
+import { auth } from "../utils/firebase/firebase-config";
 
 
 export default function AdminPanel() {
@@ -11,7 +15,28 @@ export default function AdminPanel() {
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cardLoaded, setLoading] = useState(true);
+  const { editorsByCard, updateEditors } = useEditorsByCard();
   const editorRef = useRef();
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    if (!isAuth) {
+      setToken(null);
+      return;
+    }
+    let canceled = false;
+    auth.currentUser.getIdToken().then(t => {
+      if (!canceled) setToken(t);
+    });
+    return () => { canceled = true; };
+  }, [isAuth]);
+
+
+  useWebSocket({
+    token,
+    selectedCard,
+    onEditorsUpdate: updateEditors
+  });
 
 
   useEffect(() => {
@@ -29,7 +54,8 @@ export default function AdminPanel() {
 
 
   const handleUpdate = async (extraData = {}) => {
-    if (!selectedCard || !editorRef.current) return;
+    if (!selectedCard || !editorRef.current)
+      return;
 
     const updatedData = editorRef.current.getData();
     const dataToSend = { ...updatedData, ...extraData };
@@ -59,10 +85,13 @@ export default function AdminPanel() {
               <li
                 key={card.id}
                 onClick={() => setSelectedCard(card)}
-                className={`cursor-pointer p-2 rounded-lg border 
-                  ${selectedCard?.id === card.id ? "bg-blue-100 border-blue-500" : "hover:bg-gray-200"}`}
+                className={`cursor-pointer p-2 rounded-lg border hover:bg-gray-200 flex justify-between
+                  ${selectedCard?.id === card.id ? "border-blue-500" : ""}`}
               >
-                {card.title}
+                <div className="flex items-center">
+                  {card.title}
+                </div>
+                <AvatarStack users={editorsByCard[card.id] || []} />
               </li>
             ))}
           </ul>
@@ -104,5 +133,22 @@ export default function AdminPanel() {
         </div>
       </div>
     </RequiredRole>
+  );
+}
+
+
+function AvatarStack({ users = [] }) {
+  return (
+    <div className="flex items-center -space-x-4">
+      {users.map((user, index) => (
+        <Avatar
+          key={index}
+          variant="circular"
+          alt={user.name}
+          className="border-2 border-white hover:z-10 focus:z-10"
+          src={user.avatar || "icons/user_icon.svg"} // fallback avatar
+        />
+      ))}
+    </div>
   );
 }

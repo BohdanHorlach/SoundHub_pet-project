@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../../utils/firebase/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
-import axiosInstance from "../../utils/axios/axios-instance";
+import axiosInstance from "../../utils/api/axios-instance";
 
 const AuthContext = createContext();
 
