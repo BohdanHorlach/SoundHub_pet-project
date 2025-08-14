@@ -135,7 +135,7 @@ class MusicCardService {
   }
 
 
-  async upload(userId, { title = "Untitled", categories = "[]" }, file){
+  async upload(userId, { title = "Untitled", categories = []}, file){
     const { name, ext } = path.parse(file.originalname);
     const inputPath = file.path;
     const outputExt = "mp3";
@@ -159,7 +159,7 @@ class MusicCardService {
   }
 
 
-  async update(id, { title = "Untitled", categories = "[]", status = MusicCardStatus.APPROVED }){
+  async update(id, { title = "Untitled", categories = [], status = MusicCardStatus.APPROVED }){
     const musicCard = await MusicCard.findByPk(id, {
       include: [{
         model: Category, 

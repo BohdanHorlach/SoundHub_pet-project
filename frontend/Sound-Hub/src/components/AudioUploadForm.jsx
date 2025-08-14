@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import CardEditor from "../components/card/CardEditor";
 
 
-function AudioUploadForm({ userId }) {
+function AudioUploadForm() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
-  const { isAuth, loading } = useAuth();
+  const { user, isAuth, loading } = useAuth();
   const navigate = useNavigate();
   const cardEditorRef = useRef();
 
@@ -33,16 +33,8 @@ function AudioUploadForm({ userId }) {
   };
 
   const getFormData = () => {
-    const formData = new FormData();
-    formData.append("audio", file);
-
     const cardData = cardEditorRef.current.getData();
-    formData.append("title", cardData.title);
-    formData.append("categories", JSON.stringify(cardData.categories));
-
-    formData.append("userId", userId);
-
-    return formData;
+    return { ...cardData, userId: user.id, audio: file };
   };
 
   const handleSubmit = async (event) => {

@@ -13,6 +13,7 @@ import CategoryList from "./CategoryList";
 import { useState } from "react";
 import { PlayButton, SoundWave, SoundWaveProvider } from "./SoundWave";
 import axiosInstance from "../../utils/api/axios-instance";
+import { useNavigate } from "react-router-dom";
 
 
 const FavoriteIcon = ({ isFavorite }) =>
@@ -28,18 +29,27 @@ export default function MusicCard({
   onPlay = () => { }
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
 
   const VISIBLE_CATEGORIES_COUNT = 3;
 
 
-  function onReady() {
+  const onReady = () => {
     setIsFavorite(isOnFavorite);
   }
 
 
+  const ensureAuth = (error) => {
+    if (error.status === 401) {
+      navigate("/auth");
+    }
+  };
+
+
   async function addToFavorite(cardId) {
-    await axiosInstance.post(`/favorite/${cardId}`);
-    setIsFavorite(!isFavorite);
+    await axiosInstance.post(`/favorite/${cardId}`)
+      .then(() => setIsFavorite(!isFavorite))
+      .catch((error) => ensureAuth(error));
   }
 
 

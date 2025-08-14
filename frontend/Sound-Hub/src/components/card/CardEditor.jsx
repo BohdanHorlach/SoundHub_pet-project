@@ -1,5 +1,5 @@
-import React, { useState, useImperativeHandle, forwardRef, useEffect } from "react";
-import { getCategories } from "../../utils/cashed-category";
+import React, { useState, useImperativeHandle, forwardRef } from "react";
+import { useCategories } from "../../hooks/useCategories";
 
 //random colors
 //TODO: create color palette to categories
@@ -23,11 +23,8 @@ const getShadowForCategory = (id) => {
 const CardEditor = forwardRef(({ card }, ref) => {
   const [title, setTitle] = useState(card?.title ?? "");
   const [selectedCategories, setSelectedCategories] = useState(card?.categories?.map((cat) => cat.id) ?? []);
-  const [categories, setCategories] = useState([]);
+  const { categories, loading, error } = useCategories();
 
-  useEffect(() => {
-    getCategories().then(setCategories);
-  }, []);
 
   useImperativeHandle(ref, () => ({
     getData: () => ({
@@ -36,6 +33,7 @@ const CardEditor = forwardRef(({ card }, ref) => {
     }),
   }));
 
+
   const toggleCategory = (categoryId) => {
     setSelectedCategories((selected) =>
       selected.includes(categoryId)
@@ -43,6 +41,15 @@ const CardEditor = forwardRef(({ card }, ref) => {
         : [...selected, categoryId]
     );
   };
+
+
+  if (loading) {
+    return <p className="text-gray-500">Loading categories...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">Failed to load categories</p>;
+  }
 
   return (
     <div className="space-y-6">
@@ -63,7 +70,7 @@ const CardEditor = forwardRef(({ card }, ref) => {
       <div>
         <p className="text-sm font-medium text-gray-700 mb-2">Categories:</p>
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => {
+          {categories?.map((cat) => {
             const isSelected = selectedCategories.includes(cat.id);
             const shadow = isSelected ? getShadowForCategory(cat.id) : "";
             return (

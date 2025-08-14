@@ -1,27 +1,21 @@
 const { WebSocketServer } = require("ws");
-const editorsCardService = require("./editors-card-service");
 const { authenticateWsClient } = require("./ws-auth-middleware");
+const wsHandlers = require("./ws-handlers");
 
 
 function onMessage(msg, client, wss) {
   try {
     const data = JSON.parse(msg);
+    const handler = wsHandlers[data.type];
 
-    if (data.type === "select_card" && data.cardId) {
-      editorsCardService.selectCard(data.cardId, client);
-      editorsCardService.updateAllClients(wss);
+    if (handler) {
+      handler(data, client, wss);
     } else {
-      throw new Error(`Unknown WS message type: ${data.type}`);
+      console.warn(`Unknown WS message type: ${data.type}`);
     }
   } catch (error) {
     console.error("Error processing message:", error);
   }
-}
-
-
-function onClose(client, wss) {
-  editorsCardService.handleClientDisconnect(client);
-  editorsCardService.updateAllClients(wss);
 }
 
 
@@ -35,16 +29,10 @@ function initWebSocketServer(app) {
     if (!isAuthenticated) {
       return;
     }
-
-    client.send(
-      JSON.stringify({
-        type: "editors_update",
-        editors: editorsCardService.getEditorsData(),
-      })
-    );
+    wsHandlers.connection(client);
 
     client.on("message", (msg) => onMessage(msg, client, wss));
-    client.on("close", () => onClose(client, wss));
+    client.on("close", () => wsHandlers.disconnection(client, wss));
   });
 }
 

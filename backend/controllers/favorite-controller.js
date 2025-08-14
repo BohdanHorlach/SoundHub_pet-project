@@ -1,10 +1,11 @@
 const { BadRequest } = require('../exceptions/api-errors');
 const favoriteService = require('../services/favority-service');
 
+
 class FavoriteController {
   async toggleFavorite(req, res, next) {
     try {
-      const userId = req.user.userId;
+      const userId = req.user.id;
       const { id } = req.params;
 
       if (!id)

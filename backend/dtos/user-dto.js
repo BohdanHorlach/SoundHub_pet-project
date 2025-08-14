@@ -2,19 +2,24 @@ const { BadRequest } = require("../exceptions/api-errors");
 const User = require("../models/user-model");
 
 module.exports = class UserDTO {
-    userId;
+    id;
     name;
     avatar;
     role;
 
-    constructor(user){
-        if (!(user instanceof User)) {
-            throw BadRequest('Expected instance of User model');
+    constructor(arg1, name, avatar, role) {
+        if (arg1 instanceof User) {
+            this.id = arg1.id;
+            this.name = arg1.name;
+            this.avatar = arg1.avatar;
+            this.role = arg1.role;
+        } else if (typeof arg1 === "string" && name && role) {
+            this.id = arg1;
+            this.name = name;
+            this.avatar = avatar;
+            this.role = role;
+        } else {
+            throw BadRequest("Invalid arguments for UserDTO");
         }
-
-        this.userId = user.id;
-        this.name = user.name;
-        this.avatar = user.avatar;
-        this.role = user.role;
     }
 }

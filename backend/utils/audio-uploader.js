@@ -6,6 +6,7 @@ class AudioUploader{
       destination: `${outputName}`,
       metadata: {
         contentType: "audio/mpeg",
+        contentDisposition: `attachment; filename="${outputName}"`,
       },
     });
 

@@ -20,7 +20,7 @@ class MusicCardController {
 
   async #handleSearchRequest(req, res, next, serviceMethod) {
     try {
-      const userId = req.user.userId;
+      const userId = req.user?.id ?? 0;
       const params = this.#parseSearchParams(req.query);
       const data = await serviceMethod.call(musicCardService, userId, params);
 
@@ -54,7 +54,7 @@ class MusicCardController {
         return next(BadRequest("No file provided"));
 
       console.log('Upload request: ', req.body);
-      const newCard = await musicCardService.upload(user.userId, req.body, file);
+      const newCard = await musicCardService.upload(user.id, req.body, file);
       console.log('Uploaded successfully: ', newCard, 'From user: ', user);
       return res.status(201).json({ message: "Uploaded successfully", card: newCard });
     } catch (err) {
