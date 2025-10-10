@@ -11,8 +11,11 @@ class AudioUploader{
     });
 
     await uploadFile.makePublic();
-    return uploadFile.publicUrl();
+    const publicUrl = uploadFile.publicUrl();
+    
+    return { publicUrl, storagePath: outputName };
   }
+
 
   async deleteFileFromFirebase(filename) {
     try {

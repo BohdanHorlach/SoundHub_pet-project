@@ -4,6 +4,7 @@ import AuthPage from './pages/AuthPage'
 import { useAuth } from './components/auth/AuthProvider'
 import LoadingPage from './pages/LoadingPage';
 import AdminPanel from './pages/AdminPanel';
+import ToastProvider from './components/common/ToastProvider';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path='/auth' element={<AuthPage />}></Route>
         <Route path='/admin' element={<AdminPanel />}></Route>
       </Routes>
+      <ToastProvider />
     </div>
   )
 }

@@ -1,16 +1,19 @@
 import { Typography, Button } from "@material-tailwind/react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../utils/firebase/firebase-config";
+import { useAuth } from "../auth/AuthProvider";
 
 export default function NavList() {
+  const { isAdmin } = useAuth();
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        console.log("Выход выполнен");
+        console.log("Log out complete");
         location.reload();
       })
       .catch((error) => {
-        console.error("Ошибка выхода:", error);
+        console.error("Log out ERROR:", error);
       });
   };
 
@@ -47,6 +50,24 @@ export default function NavList() {
           Categories
         </a>
       </Typography>
+      <>
+        {
+          isAdmin ?
+            (
+              <Typography
+                as="li"
+                variant="small"
+                color="blue-gray"
+                className="p-1 font-normal"
+              >
+                <a href="/admin" className="flex items-center">
+                  Admin Panel
+                </a>
+              </Typography>
+            ) :
+            (<></>)
+        }
+      </>
       <div>
         <Button onClick={handleLogout}>
           Log out

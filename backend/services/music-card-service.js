@@ -7,6 +7,7 @@ const audioUploader = require("../utils/audio-uploader");
 const { convertedPath } = require("../config/temp-file-cleaner-config");
 const MusicCardStatus = require("../enums/music-card-status");
 const { BadRequest } = require("../exceptions/api-errors");
+const { bucket } = require("../config/firebase-config");
 
 
 const DEFAULT_PAGE = 1;
@@ -95,10 +96,11 @@ class MusicCardService {
   }
 
 
-  async #createCard(title, authorId, audioUrl, categories) {
+  async #createCard(title, authorId, publicUrl, storagePath, categories) {
     const newCard = await MusicCard.create({
       title: title,
-      audioUrl: audioUrl,
+      publicUrl: publicUrl,
+      storagePath: storagePath,
       authorId: authorId,
     });
 
@@ -145,10 +147,10 @@ class MusicCardService {
 
     try {
       await audioConverter.convertToMp3(inputPath, outputPath, outputExt);
-      const audioUrl = await audioUploader.upload(outputPath, outputName);
+      const { publicUrl, storagePath } = await audioUploader.upload(outputPath, outputName);
       uploadedToFirebase = true;
 
-      return this.#createCard(title, userId, audioUrl, categories);
+      return this.#createCard(title, userId, publicUrl, storagePath, categories);
     } 
     catch (err) {
       if(uploadedToFirebase)
@@ -174,6 +176,33 @@ class MusicCardService {
 
     await musicCard.update({ title: title, status: status });
     return await this.#setCategories(musicCard, categories);
+  }
+
+
+  async getSignedDownloadUrl(id) {
+    const musicCard = await MusicCard.findByPk(id);
+  
+    if (!musicCard) {
+      throw BadRequest('MusicCard not found');
+    }
+
+    const file = bucket.file(musicCard.storagePath);
+    const filename = `${musicCard.title}.mp3`;
+    const encodedFilename = encodeURIComponent(filename);
+  
+    const expiresMs = Date.now() + 15 * 60 * 1000;
+    const options = {
+      version: "v4",
+      action: "read",
+      expires: expiresMs,
+      queryParams: {
+        "response-content-disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodedFilename}`,
+        "response-content-type": "audio/mpeg"
+      }
+    };
+
+    const [url] = await file.getSignedUrl(options);
+    return url;
   }
 }
 

@@ -1,4 +1,4 @@
-export default function CategoryList({ categories, visibleCount = 5 }) {
+export default function CategoryList({ categories, visibleCount = 999 }) {
   const visible = categories.slice(0, visibleCount);
   const hasMore = categories.length > visibleCount;
 

@@ -1,6 +1,6 @@
 import { Card, CardBody, List, Typography } from "@material-tailwind/react";
 import { signInWithPopup } from "firebase/auth";
-import SafeArea from "../components/base/SafeArea";
+import SafeArea from "../components/common/SafeArea";
 import AuthType from "../components/auth/AuthType";
 import { auth } from "../utils/firebase/firebase-config";
 import providers from "../utils/firebase/provides";

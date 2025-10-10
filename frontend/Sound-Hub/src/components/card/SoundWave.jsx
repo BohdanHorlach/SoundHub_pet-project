@@ -20,7 +20,7 @@ export const SoundWaveProvider = ({ children }) => {
 };
 
 
-export const SoundWave = ({ audioUrl, onReady = () => { } }) => {
+export const SoundWave = ({ audioUrl, containerRef, onReady = () => { } }) => {
   const { setWavesurfer, setIsPlaying } = useContext(WavesurferContext);
 
   function onLoadedSource(wavesurf) {
@@ -32,6 +32,7 @@ export const SoundWave = ({ audioUrl, onReady = () => { } }) => {
 
   return (
     <WavesurferPlayer
+      container={containerRef?.current}
       height="auto"
       waveColor="#0284c7"
       progressColor="#94a3b8"

@@ -6,7 +6,8 @@ const MusicCardStatus = require('../enums/music-card-status');
 const MusicCard = sequelize.define('MusicCard', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   title: { type: DataTypes.STRING, allowNull: false },
-  audioUrl: { type: DataTypes.STRING, allowNull: false },
+  publicUrl: { type: DataTypes.STRING, allowNull: false },
+  storagePath: { type: DataTypes.STRING, allowNull: false },
   status: { 
     type: DataTypes.ENUM(...Object.values(MusicCardStatus)), 
     defaultValue: MusicCardStatus.PENDING

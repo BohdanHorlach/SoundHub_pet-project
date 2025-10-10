@@ -2,4 +2,4 @@
 
 Stack: 
 - Frontend: React JS, Material Tailwind, Tailwind CSS, Firebase
-- Backend: Node JS, Express, Firebase Admin
+- Backend: Node JS, Express, Firebase Admin, ffmpeg

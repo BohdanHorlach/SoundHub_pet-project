@@ -15,6 +15,7 @@ router.get("/user", authMiddleware(), usersController.getCurrentUser);
 router.get("/music", authMiddleware(true), musicController.getAll);
 router.post("/music", authMiddleware(), upload.single("audio"), musicController.uploadCard);
 router.post("/music/:id", authMiddleware(), roleMiddleware(Roles.ADMIN), musicController.update);
+router.get("/music/:id/download", musicController.download);
 
 router.post("/favorite/:id", authMiddleware(), favoriteController.toggleFavorite);
 

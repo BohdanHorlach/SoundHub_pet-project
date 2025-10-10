@@ -77,6 +77,18 @@ class MusicCardController {
       next(UnenspectedError("Update failed"));
     }
   }
+
+
+  async download(req, res, next) {
+    try {
+      const { id } = req.params;
+      const url = await musicCardService.getSignedDownloadUrl(id);
+      res.redirect(url);
+    } catch (error) {
+      console.error(error);
+      next(UnenspectedError(`Download failed: ${error.message}`));
+    }
+  }
 }
 
 module.exports = new MusicCardController();

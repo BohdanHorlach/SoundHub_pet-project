@@ -18,7 +18,7 @@ module.exports = class MusicCardDTO {
 
     this.id = musicCard.id;
     this.title = musicCard.title;
-    this.audioUrl = musicCard.audioUrl;
+    this.audioUrl = musicCard.publicUrl;
     this.status = musicCard.status;
     this.authorId = musicCard.authorId;
     this.isOnFavorite = isOnFavorite;
