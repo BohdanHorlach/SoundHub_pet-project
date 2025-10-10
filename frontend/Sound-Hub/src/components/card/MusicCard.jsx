@@ -46,12 +46,13 @@ export default function MusicCard({ card, onPlay = () => { } }) {
           </CardBody>
           <CardFooter className="pt-0 w-[100%]">
             <CardControls
-              cardId={card.id}
               isFavorite={isFavorite}
               onToggleFavorite={() => addToFavorite(card.id)}
               onPlay={onPlay}
               audioUrl={card.audioUrl}
               title={card.title}
+              downloadUrl={`/api/music/${card.id}/download`}
+              canDownload
               compact
             />
           </CardFooter>
@@ -64,6 +65,8 @@ export default function MusicCard({ card, onPlay = () => { } }) {
         isFavorite={isFavorite}
         onToggleFavorite={addToFavorite}
         onPlay={onPlay}
+        downloadUrl={`/api/music/${card.id}/download`}
+        canDownload
       />
     </>
   );

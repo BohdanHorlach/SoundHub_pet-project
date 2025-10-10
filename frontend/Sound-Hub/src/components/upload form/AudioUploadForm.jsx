@@ -12,11 +12,11 @@ function AudioUploadForm() {
     setFile,
     message,
     setMessage,
-    handleSubmit } = useUploadActions();
+    handleUpload } = useUploadActions();
 
   return (
     <div className="flex items-center justify-center">
-      <form onSubmit={(e) => handleSubmit(e, cardEditorRef)} style={{ maxWidth: 400, margin: "auto" }}>
+      <form onSubmit={(e) => handleUpload(e, cardEditorRef)} style={{ maxWidth: 400, margin: "auto" }}>
         <CardEditor setMessage={setMessage} ref={cardEditorRef} />
 
         <div className="my-8">

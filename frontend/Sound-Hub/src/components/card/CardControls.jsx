@@ -5,31 +5,31 @@ import { PlayButton } from "./SoundWave";
 
 
 export default function CardControls({
-  cardId,
   isFavorite,
   onToggleFavorite,
   onPlay,
-  audioUrl,
   title,
+  downloadUrl,
+  canDownload = false,
   compact = false,
 }) {
 
 
   return (
     <div onClick={(e) => e.stopPropagation()} className={`flex ${compact ? "gap-1" : "gap-4 mt-auto"} justify-between`}>
-      <Button onClick={onToggleFavorite} className="flex flex-grow-0">
+      <Button onClick={onToggleFavorite} className="flex w-[30%] justify-center">
         <FavoriteIcon
           isFavorite={isFavorite}
           className={(isFavorite ? "text-red-700" : "text-white")}
         />
       </Button>
 
-      <div onClick={(e) => e.stopPropagation()} className="flex flex-grow">
+      <div onClick={(e) => e.stopPropagation()} className="flex w-[50%]">
         <PlayButton onPlay={onPlay} />
       </div>
 
-      <a href={`/api/music/${cardId}/download`} download={`${title}.mp3`}>
-        <Button className="flex flex-grow-0">
+      <a className="flex w-[30%]" href={canDownload ? downloadUrl : undefined} download={`${title}.mp3`}>
+        <Button className="w-full flex justify-center">
           <ArrowDownCircleIcon className="size-6 text-white" />
         </Button>
       </a>

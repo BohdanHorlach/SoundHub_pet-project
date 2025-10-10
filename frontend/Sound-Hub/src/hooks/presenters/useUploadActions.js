@@ -42,7 +42,7 @@ export function useUploadActions() {
   };
 
 
-  const handleSubmit = async (event, cardEditorRef) => {
+  const handleUpload = async (event, cardEditorRef) => {
     event.preventDefault();
     if (!validateForm(cardEditorRef)) return;
 
@@ -74,6 +74,6 @@ export function useUploadActions() {
     setFile,
     message,
     setMessage,
-    handleSubmit
+    handleUpload
   };
 }
