@@ -4,7 +4,7 @@ const cors = require('cors');
 const router = require('./routes/index');
 const exeptionTracker = require('./middlewares/exeption-tracker');
 const { initDB } = require('./models');
-const { tempFileCleaner } = require('./config/temp-file-cleaner-config');
+const { tempFileCleaner, rejectedCardsCleaner } = require('./config/cleaners-config');
 const initWebSocketServer = require('./ws/web-socket-server');
 
 
@@ -31,6 +31,7 @@ app.use(exeptionTracker); //errors proccessing
 initDB(app);
 initWebSocketServer(app);
 tempFileCleaner.start();
+rejectedCardsCleaner.start();
 
 
 process.on('uncaughtException', (err) => {

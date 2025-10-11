@@ -11,6 +11,7 @@ const favoriteController = require('../controllers/favorite-controller');
 
 router.get("/category", categoryController.getAll);
 router.get("/user", authMiddleware(), usersController.getCurrentUser);
+router.get("/user/:id", usersController.getUserData);
 
 router.get("/music", authMiddleware(true), musicController.getAll);
 router.post("/music", authMiddleware(), upload.single("audio"), musicController.uploadCard);

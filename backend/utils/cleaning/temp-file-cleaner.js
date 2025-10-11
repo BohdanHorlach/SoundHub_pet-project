@@ -1,40 +1,18 @@
 const fs = require("fs");
 const path = require("path");
+const PeriodicCleaner = require("./periodic-cleaner");
 
-class TempFileCleaner {
+
+class TempFileCleaner extends PeriodicCleaner {
   folders;
-  intervalMs;
-  intervalId;
 
-  /**
-   * @param {string[]} folders - absolute folder paths
-   * @param {number} intervalMs - cleaning interval in milliseconds
-   */
-  constructor(folders = [], intervalMs = 10 * 60 * 1000) {
+  /** 
+   * @param {string[]} folders - absolute folder paths 
+   * @param {number} intervalMs - cleaning interval in milliseconds 
+  */
+  constructor(folders = [], intervalMs) {
+    super(intervalMs);
     this.folders = folders;
-    this.intervalMs = intervalMs;
-    this.intervalId = null;
-  }
-
-
-  start() {
-    if (this.intervalId)
-      return; 
-
-    this.intervalId = setInterval(() => {
-      this.clean();
-    }, this.intervalMs);
-
-    console.log(`TempFileCleaner started. Interval: ${this.intervalMs}ms`);
-  }
-
-
-  stop() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-      console.log("TempFileCleaner stopped.");
-    }
   }
 
 
@@ -58,5 +36,6 @@ class TempFileCleaner {
     }
   }
 }
+
 
 module.exports = TempFileCleaner;

@@ -1,6 +1,6 @@
 const multer = require("multer");
 const { BadRequest } = require("../exceptions/api-errors");
-const { uploadPath } = require("../config/temp-file-cleaner-config");
+const { uploadPath } = require("../config/cleaners-config");
 
 const ALLOWED_TYPES = [
   "audio/mpeg",
