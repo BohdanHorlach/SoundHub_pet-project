@@ -38,13 +38,23 @@ export function useUploadActions() {
 
   const getFormData = (cardEditorRef) => {
     const cardData = cardEditorRef.current?.getData();
-    return { ...cardData, userId: user.id, audio: file };
+    const categoryIds = Array.isArray(cardData?.categories)
+        ? cardData.categories.map((c) => c.id)
+        : [];
+
+    return {
+      ...cardData,
+      categories: categoryIds,
+      userId: user.id,
+      audio: file,
+    };
   };
 
 
   const handleUpload = async (event, cardEditorRef) => {
     event.preventDefault();
-    if (!validateForm(cardEditorRef)) return;
+    if (!validateForm(cardEditorRef)) 
+      return;
 
     const loadingToast = toast.loading("Uploading audio...");
 

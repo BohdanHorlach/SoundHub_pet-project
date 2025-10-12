@@ -10,7 +10,6 @@ const CardEditor = forwardRef(({ card, setMessage }, ref) => {
   const [localError, setLocalError] = useState("");
   const { categories, loading, error } = useCategories();
 
-
   useEffect(() => {
     if (setMessage) {
       setMessage(localError);
@@ -44,6 +43,12 @@ const CardEditor = forwardRef(({ card, setMessage }, ref) => {
   }));
 
 
+  const clearMessage = (id) => {
+    if (setMessage)
+      setMessage("")
+  }
+
+
   if (loading) {
     return <p className="text-gray-500">Loading categories...</p>;
   }
@@ -63,7 +68,7 @@ const CardEditor = forwardRef(({ card, setMessage }, ref) => {
           forbidden: /['"`#/]/,
           maxLength: 25,
         }}
-        onChange={(id) => setMessage("")}
+        onChange={clearMessage}
       />
 
       <MultiChooseSelector
@@ -73,7 +78,7 @@ const CardEditor = forwardRef(({ card, setMessage }, ref) => {
         defaultSelected={card?.categories?.map((cat) => cat.id) ?? []}
         getId={(cat) => cat.id}
         getLabel={(cat) => cat.name}
-        onChange={(id) => setMessage("")}
+        onChange={clearMessage}
       />
     </div>
   );

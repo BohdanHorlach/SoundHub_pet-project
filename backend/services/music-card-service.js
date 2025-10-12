@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { Category, MusicCard, User, Favorite } = require("../models");
 const MusicCardDTO = require("../dtos/music-card-dto");
 const path = require('path');
@@ -21,27 +21,55 @@ class MusicCardService {
   }
 
 
-  #getSearchQuery({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
-    limit = this.#validateLimit(limit);
-    
-    const offset = (page - 1) * limit;
-    const categoryFilter = {
-      model: Category,
-      as: 'categories',
-      attributes: ['id', 'name'],
-      through: { attributes: [] },
-    };
-    
-    if (categories.length > 0) {
-      categoryFilter.where = { id: { [Op.in]: categories } };
+  #buildBaseFilter(title = "", status) {
+    const where = { status };
+    const cardName = title.trim();
+
+    if (cardName) {
+      where.title = {
+        [Op.like]: `%${cardName}%`
+      };
     }
 
+    return where;
+  }
+
+
+  #buildCategoriesFilter(categories) {
+    return {
+      [Op.in]: Sequelize.literal(`(
+        SELECT musicCardId
+        FROM categorymusics
+        WHERE categoryId IN (${categories.join(',')})
+        GROUP BY musicCardId
+        HAVING COUNT(DISTINCT categoryId) = ${categories.length}
+      )`)
+    };
+  }
+
+
+  #getSearchQuery({ page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
+    limit = this.#validateLimit(limit);
+    const offset = (page - 1) * limit;
+    const where = this.#buildBaseFilter(title, status);
+
+    if(categories.length > 0){
+      where.id = this.#buildCategoriesFilter(categories);
+    }
+    
     const query = {
       limit: Number(limit),
       offset: Number(offset),
       order: [['createdAt', 'DESC']],
-      where: { status: status },
-      include: [categoryFilter]
+      where,
+      include: [
+        {
+          model: Category,
+          as: 'categories',
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        },
+      ],
     };
 
     return query;
@@ -108,8 +136,8 @@ class MusicCardService {
   }
 
 
-  async getFavorites(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, categories, status });
+  async getFavorites(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
+    const baseQuery = this.#getSearchQuery({ page, limit, title, categories, status });
  
     baseQuery.include.push({
       model: User,
@@ -122,17 +150,16 @@ class MusicCardService {
   }
 
 
-  async getUploads(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, categories, status });
-  
+  async getUploads(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
+    const baseQuery = this.#getSearchQuery({ page, limit, title, categories, status });
     baseQuery.where = { authorId: userId };
   
     return this.#findAndCountAll(baseQuery, userId);
   }
 
 
-  async getAll(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, categories = [], status = MusicCardStatus.APPROVED }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, categories, status });
+  async getAll(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
+    const baseQuery = this.#getSearchQuery({ page, limit, title, categories, status });
     return this.#findAndCountAll(baseQuery, userId);
   }
 

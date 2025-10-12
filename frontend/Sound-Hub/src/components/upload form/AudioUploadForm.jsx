@@ -1,12 +1,17 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import CardEditor from "../card/CardEditor";
 import { Button, Typography } from "@material-tailwind/react";
 import AudioDropzone from "./AudioDropzone";
 import { useUploadActions } from "../../hooks/presenters/useUploadActions";
+import MusicCardModal from "../card/MusicCardModal";
+import useSession from "../../hooks/api/useSession";
 
 
 function AudioUploadForm() {
+  const { user } = useSession();
   const cardEditorRef = useRef();
+  const [previewOpen, setPreviewOpen] = useState(false);
+
   const {
     file,
     setFile,
@@ -14,9 +19,37 @@ function AudioUploadForm() {
     setMessage,
     handleUpload } = useUploadActions();
 
+
+  const getPreviewCard = () => {
+    const data = cardEditorRef.current?.getData();
+    if (!data || !file) return null;
+
+    return {
+      id: "preview",
+      title: data.title || "Untitled",
+      audioUrl: URL.createObjectURL(file),
+      categories: data.categories || [],
+      authorId: user.id,
+    };
+  };
+
+
+  const handlePreview = (e) => {
+    e.preventDefault();
+
+    const card = getPreviewCard();
+    if (!card) {
+      setMessage("Please fill out title, categories and upload an audio file before preview.");
+      return;
+    }
+
+    setPreviewOpen(true);
+  };
+
+
   return (
     <div className="flex items-center justify-center">
-      <form onSubmit={(e) => handleUpload(e, cardEditorRef)} style={{ maxWidth: 400, margin: "auto" }}>
+      <div style={{ maxWidth: 400, margin: "auto" }}>
         <CardEditor setMessage={setMessage} ref={cardEditorRef} />
 
         <div className="my-8">
@@ -31,16 +64,36 @@ function AudioUploadForm() {
         </div>
 
         <Button
-          type="submit"
           variant="gradient"
           color="green"
           className="w-full"
+          onClick={handlePreview}
         >
           Upload
         </Button>
 
         {message && <p className="text-red-500 text-sm mt-2">{message}</p>}
-      </form>
+      </div>
+
+
+      {/* Preview Modal */}
+      {previewOpen && (
+        <MusicCardModal
+          open={previewOpen}
+          card={getPreviewCard()}
+          onClose={() => setPreviewOpen(false)}
+          isFavorite={false}
+          onToggleFavorite={() => { }}
+          onPlay={() => { }}
+          downloadUrl={null}
+          canDownload={false}
+          actionButton={
+            <Button color="green" variant="gradient" onClick={(e) => { handleUpload(e, cardEditorRef), setPreviewOpen(false); }}>
+              Confirm Upload
+            </Button>
+          }
+        />
+      )}
     </div>
   );
 }

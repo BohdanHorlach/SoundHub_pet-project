@@ -30,7 +30,7 @@ class RejectedCardCleaner extends PeriodicCleaner {
       }
   
       await cleanupTransaction.commit();
-      console.log(`Deleted ${rejectedCards.length} cards`);
+      console.log(`Deleted ${rejectedCards.length} rejected cards from DB`);
     } catch (err) {
       await cleanupTransaction.rollback();
       console.error('Error while deleting rejected cards:', err);

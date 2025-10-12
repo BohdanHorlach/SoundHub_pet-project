@@ -28,7 +28,7 @@ export function useModeratedCards({ isAuth, loading, token }) {
   }, [isAuth, loading]);
 
 
-  const hideCardFromList = (id, duration) => {
+  const hideCardFromList = (id, duration = 700) => {
     setFadingCardId(id);
     if (selectedCard?.id === id) setSelectedCard(null);
     setTimeout(() => {

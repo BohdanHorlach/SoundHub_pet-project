@@ -12,9 +12,9 @@ class MusicCardController {
   }
 
   #parseSearchParams(query) {
-    const { page = 1, limit = 9, categories = "[]", status = MusicCardStatus.APPROVED } = query;
+    const { page = 1, limit = 9, title = "", categories = "[]", status = MusicCardStatus.APPROVED } = query;
     const parsedCategories = JSON.parse(categories);
-    return { page, limit, parsedCategories, status };
+    return { page, limit, title, categories: parsedCategories, status };
   }
 
 

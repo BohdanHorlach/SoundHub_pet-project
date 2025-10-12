@@ -6,9 +6,20 @@ export function useModerateActions({ selectedCard, hideCardFromList, brodcarsCar
   const editorRef = useRef();
   
   const handleUpdate = async (extraData = {}, duration = 700) => {
-    if (!selectedCard || !editorRef.current) return;
+    if (!selectedCard || !editorRef.current) 
+      return;
+
     const updatedData = editorRef.current.getData();
-    const dataToSend = { ...updatedData, ...extraData };
+    const categoryIds = Array.isArray(updatedData?.categories)
+    ? updatedData.categories.map((c) => c.id)
+    : [];
+
+    const dataToSend = { 
+      ...updatedData, 
+      categories: categoryIds, 
+      ...extraData 
+    };
+
     try {
       await updateCardStatus(selectedCard.id, dataToSend);
       hideCardFromList(selectedCard.id, duration);

@@ -23,7 +23,6 @@ export default function MusicCard({ card, onPlay = () => { } }) {
 
   const VISIBLE_CATEGORIES_COUNT = 3;
 
-
   return (
     <>
       <SoundWaveProvider>

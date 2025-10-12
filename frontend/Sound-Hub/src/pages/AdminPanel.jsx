@@ -66,20 +66,25 @@ export default function AdminPanel() {
             <div>
               <SoundWaveProvider>
                 <SoundWave audioUrl={selectedCard.audioUrl} />
-                <PlayButton />
+
+                <div className="flex justify-center mt-5">
+                  <div className="flex w-[40%]">
+                    <PlayButton />
+                  </div>
+                </div>
               </SoundWaveProvider>
               <h2 className="text-xl font-bold mb-4">Edit card</h2>
               <CardEditor key={selectedCard.id} card={selectedCard} ref={editorRef} />
-              <div className="mt-4 flex gap-4">
+              <div className="flex justify-center mt-10 gap-4">
                 <button
                   onClick={() => confirmAction(() => handleUpdate({ status: "approved" }, HIDE_DURATION))}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  className="px-4 py-2 w-24 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => confirmAction(() => handleUpdate({ status: "rejected" }, HIDE_DURATION))}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  className="px-4 py-2 w-24 bg-red-600 text-white rounded-md hover:bg-red-700"
                 >
                   Reject
                 </button>

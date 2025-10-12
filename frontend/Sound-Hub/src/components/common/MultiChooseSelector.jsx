@@ -3,7 +3,7 @@ import { Button, Typography, Input } from "@material-tailwind/react";
 import HoveringItem from "./HoveringItem";
 
 const MAX_HINTS_COUNT = 10;
-
+//TODO: Add colors for categories
 const shadowColorsMap = {
   0: { shadow: "shadow-red-500/50", focus: "focus:ring-red-500" },
   1: { shadow: "shadow-green-500/50", focus: "focus:ring-green-500" },
@@ -28,23 +28,36 @@ const MultiChooseSelector = forwardRef(({ label, items = [], defaultSelected = [
   const [filtered, setFiltered] = useState([]);
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef(null);
 
 
   useEffect(() => {
     if (query.trim() === "") {
       setFiltered([]);
-    } else {
-      const q = query.toLowerCase();
-      const res = items
-        .filter(
-          (item) =>
-            getLabel(item).toLowerCase().includes(q) &&
-            !selected.includes(getId(item))
-        )
-        .slice(0, MAX_HINTS_COUNT);
-      setFiltered(res);
+      return;
     }
+
+    const q = query.toLowerCase();
+
+    const filtered = items
+      .filter(item => !selected.includes(getId(item)))
+      .sort((a, b) => {
+        const aLabel = getLabel(a).toLowerCase();
+        const bLabel = getLabel(b).toLowerCase();
+
+        const aStarts = aLabel.startsWith(q) ? 0 : 1;
+        const bStarts = bLabel.startsWith(q) ? 0 : 1;
+
+        if (aStarts !== bStarts) return aStarts - bStarts;
+
+        return aLabel.localeCompare(bLabel);
+      })
+      .filter(item => getLabel(item).toLowerCase().includes(q))
+      .slice(0, MAX_HINTS_COUNT);
+
+    setFiltered(filtered);
+    setActiveIndex(filtered.length > 0 ? 0 : -1);
   }, [query, items, selected]);
 
 
@@ -84,11 +97,33 @@ const MultiChooseSelector = forwardRef(({ label, items = [], defaultSelected = [
   };
 
 
+  const handleKeyDown = (e) => {
+    if (filtered.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex(prev => (prev + 1) % filtered.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex(prev => (prev - 1 + filtered.length) % filtered.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (activeIndex >= 0 && activeIndex < filtered.length) {
+        addItem(filtered[activeIndex]);
+      }
+    }
+  };
+
+
   useImperativeHandle(ref, () => ({
     getData: () => {
       const isValid = validate();
-      if (!isValid) return null;
-      return selected;
+
+      if (!isValid)
+        return null;
+
+      const selectedItems = items.filter((it) => selected.includes(getId(it)));
+      return selectedItems;
     },
     clear: () => {
       setSelected([]);
@@ -110,22 +145,25 @@ const MultiChooseSelector = forwardRef(({ label, items = [], defaultSelected = [
       {/* Search input field */}
       <Input
         inputRef={inputRef}
-        label="Search..."
+        label="Search input"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
         crossOrigin={undefined}
+        color="blue"
       />
 
       {/* Hints list */}
       {filtered.length > 0 && (
-        <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg mt-1 shadow-md max-h-48 overflow-auto">
-          {filtered.map((item) => {
+        <div className="absolute z-10 w-72 bg-white border border-gray-200 rounded-lg mt-1 shadow-md max-h-48 overflow-auto">
+          {filtered.map((item, index) => {
             const id = getId(item);
             const name = getLabel(item);
+            const active = index === activeIndex;
             return (
               <div
                 key={id}
-                className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                className={`px-3 py-2 cursor-pointer ${active ? "bg-blue-100" : "hover:bg-gray-100"}`}
                 onClick={() => addItem(item)}
               >
                 {name}

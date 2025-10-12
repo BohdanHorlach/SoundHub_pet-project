@@ -21,11 +21,13 @@ export default function MusicCardModal({
   onToggleFavorite,
   onPlay,
   downloadUrl,
-  canDownload = false
+  canDownload = false,
+  actionButton
 }) {
-
   const { user, loading, error } = useUserById(card.authorId, open);
 
+  if (open == false)
+    return <></>
 
   return (
 
@@ -81,7 +83,8 @@ export default function MusicCardModal({
                 <CategoryList categories={card.categories} isWrap />
               </div>
               <div className="text-end">
-                <Button variant="text" color="red" onClick={onClose}>
+                {actionButton ?? ("")}
+                <Button className="ml-1" variant="text" color="red" onClick={onClose}>
                   Close
                 </Button>
               </div>
