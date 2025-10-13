@@ -1,4 +1,5 @@
 import { auth } from "../../utils/firebase/firebase-config";
+import { signOut } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import axiosInstance from "../../utils/api/axios-instance";
 import { useEffect, useState } from "react";
@@ -41,5 +42,17 @@ export default function useSession(){
   }, [isAuth]);
 
 
-  return { user, isAuth, loading, isAdmin, token };
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("Log out complete");
+        location.reload();
+      })
+      .catch((error) => {
+        console.error("Log out ERROR:", error);
+      });
+  };
+
+
+  return { user, isAuth, loading, isAdmin, token, handleLogout };
 }

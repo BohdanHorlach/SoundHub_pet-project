@@ -2,7 +2,7 @@ import { Typography, Button, Navbar, IconButton, Drawer } from "@material-tailwi
 import SafeArea from "./SafeArea";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavList from "../navbar/NavList";
+import NavList from "../navbar/AvatarMenu";
 import { useAuth } from "../auth/AuthProvider";
 
 const WITH_THRESHOLD = 960;

@@ -27,7 +27,6 @@ export default function CategoryList({ categories, visibleCount = 999, isWrap = 
 
   return (
     <div className="relative">
-      {/* Градиенты для подсказки скролла */}
       {canScrollTop && (
         <div className="absolute right-0 left-0 top-0 h-5 pointer-events-none bg-gradient-to-b from-gray-400 to-transparent z-30"></div>
       )}

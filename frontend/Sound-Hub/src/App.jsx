@@ -5,6 +5,8 @@ import { useAuth } from './components/auth/AuthProvider'
 import LoadingPage from './pages/LoadingPage';
 import AdminPanel from './pages/AdminPanel';
 import ToastProvider from './components/common/ToastProvider';
+import UploadPage from './pages/UploadPage';
+import SavedCardsPage from './pages/SavedCardsPage';
 
 
 function App() {
@@ -16,8 +18,10 @@ function App() {
     <div>
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
+        <Route path='/saved' element={<SavedCardsPage />}></Route>
         <Route path='/auth' element={<AuthPage />}></Route>
         <Route path='/admin' element={<AdminPanel />}></Route>
+        <Route path='/upload' element={<UploadPage />}></Route>
       </Routes>
       <ToastProvider />
     </div>

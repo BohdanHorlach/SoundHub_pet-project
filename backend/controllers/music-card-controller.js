@@ -4,12 +4,10 @@ const musicCardService = require("../services/music-card-service");
 
 class MusicCardController {
 
-  constructor() {
-    this.getFavorites = this.getFavorites.bind(this);
-    this.getUploads = this.getUploads.bind(this);
-    this.getAll = this.getAll.bind(this);
-    this.uploadCard = this.uploadCard.bind(this);
+  constructor(){
+    this.getCards = this.getCards.bind(this);
   }
+
 
   #parseSearchParams(query) {
     const { page = 1, limit = 9, title = "", categories = "[]", status = MusicCardStatus.APPROVED } = query;
@@ -18,31 +16,17 @@ class MusicCardController {
   }
 
 
-  async #handleSearchRequest(req, res, next, serviceMethod) {
+  async getCards(req, res, next) {
     try {
       const userId = req.user?.id ?? 0;
       const params = this.#parseSearchParams(req.query);
-      const data = await serviceMethod.call(musicCardService, userId, params);
-
+      const type = req.query.type || "all";
+      
+      const data = await musicCardService.getCardsByType(userId, params, type);
       return res.status(200).json(data);
     } catch (error) {
       next(error);
     }
-  }
-
-
-  getFavorites(req, res, next) {
-    return this.#handleSearchRequest(req, res, next, musicCardService.getFavorites);
-  }
-
-  
-  getUploads(req, res, next) {
-    return this.#handleSearchRequest(req, res, next, musicCardService.getUploads);
-  }
-
-
-  async getAll(req, res, next) {
-    return this.#handleSearchRequest(req, res, next, musicCardService.getAll);
   }
 
 
@@ -56,6 +40,7 @@ class MusicCardController {
       console.log('Upload request: ', req.body);
       const newCard = await musicCardService.upload(user.id, req.body, file);
       console.log('Uploaded successfully: ', newCard, 'From user: ', user);
+
       return res.status(201).json({ message: "Uploaded successfully", card: newCard });
     } catch (err) {
       console.error(err);

@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { useCategories } from "../../hooks/api/useCategories";
 import { useSearchParams } from "react-router-dom";
-import { Button } from "@material-tailwind/react";
+import { Button, Collapse, Input, Typography } from "@material-tailwind/react";
+import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import CategoryGrid from "./CategoryGrid";
 
 
 export default function SearchForm({ onSearch }) {
-  const { categories, loading: loadingCategories } = useCategories();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const initialTitle = searchParams.get("title") || "";
   const initialCategories = JSON.parse(searchParams.get("categories") || "[]");
 
+  const { categories, loading: loadingCategories, error: errorCategories } = useCategories();
   const [title, setTitle] = useState(initialTitle);
+  const [openCategories, setOpenCategories] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(initialCategories);
 
 
@@ -35,46 +37,65 @@ export default function SearchForm({ onSearch }) {
   };
 
 
+  const toggleOpen = () => {
+    setOpenCategories(!openCategories);
+  }
+
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 mb-6 bg-card p-4 rounded-2xl shadow-md"
+      className="flex flex-col w-full gap-4 mb-6 bg-card p-4 rounded-2xl shadow-md"
     >
-      {/* Search by title */}
-      <input
-        type="text"
-        placeholder="Search by title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-      />
-
-      {/* Search by categories */}
-      <div className="flex flex-wrap gap-3">
-        {loadingCategories ? (
-          <p className="text-gray-400">Loading categories...</p>
-        ) : (
-          categories?.map((cat) => (
-            <label key={cat.id} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedCategories.includes(cat.id)}
-                onChange={() => toggleCategory(cat.id)}
-              />
-              <span>{cat.name}</span>
-            </label>
-          ))
-        )}
+      <div className="flex justify-between gap-3 w-full">
+        {/* Search by title */}
+        <Input
+          label="Title input"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          color="blue"
+          size="lg"
+          className="w-[60%]"
+        />
+        <div>
+          <Button loading={loadingCategories} onClick={toggleOpen} className="px-4">
+            <FunnelIcon className="size-5" color="white" />
+          </Button>
+        </div>
+        <Button
+          color="green"
+          variant="gradient"
+          type="submit"
+          className="flex items-center pl-5 md:pr-10"
+        >
+          <span className="">
+            <MagnifyingGlassIcon className="size-5" color="white" />
+          </span>
+          <span className="hidden md:inline md:ml-2">
+            Search
+          </span>
+        </Button>
       </div>
 
-      <Button
-        color="green"
-        variant="gradient"
-        type="submit"
-        className="bg-primary text-white rounded-xl py-2 hover:bg-primary/80 transition"
-      >
-        Search
-      </Button>
+      {/* Search by categories */}
+      <div className="w-full">
+        <Collapse open={openCategories}>
+          <div className="flex flex-wrap gap-3">
+            {loadingCategories ? (
+              <Typography className="text-gray-400">Loading categories...</Typography>
+            ) : errorCategories ? (
+              <Typography color="red">Error while loading categories. Try reloading the page</Typography>
+            )
+              : (
+                <CategoryGrid
+                  categories={categories}
+                  selected={selectedCategories}
+                  onToggle={toggleCategory}
+                />
+              )}
+          </div>
+        </Collapse>
+      </div>
     </form>
   );
 }

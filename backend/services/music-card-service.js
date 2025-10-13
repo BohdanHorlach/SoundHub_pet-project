@@ -136,30 +136,32 @@ class MusicCardService {
   }
 
 
-  async getFavorites(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
+  async getCardsByType(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }, type = "all") {
     const baseQuery = this.#getSearchQuery({ page, limit, title, categories, status });
- 
-    baseQuery.include.push({
-      model: User,
-      as: 'favoritedBy',
-      attributes: [],
-      through: { where: { userId: userId }, attributes: [] }
-    });
+
+    switch (type) {
+      case "favorite":
+        baseQuery.include.push({
+          model: User,
+          as: 'favoritedBy',
+          attributes: [],
+          through: { where: { userId }, attributes: [] },
+          required: true
+        });
+        break;
   
-    return this.#findAndCountAll(baseQuery, userId);
-  }
-
-
-  async getUploads(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, title, categories, status });
-    baseQuery.where = { authorId: userId };
+      case "uploads":
+        baseQuery.where = {
+          ...baseQuery.where,
+          authorId: userId
+        };
+        break;
   
-    return this.#findAndCountAll(baseQuery, userId);
-  }
+      case "all":
+      default:
+        break;
+    }
 
-
-  async getAll(userId, { page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, title = "", categories = [], status = MusicCardStatus.APPROVED }) {
-    const baseQuery = this.#getSearchQuery({ page, limit, title, categories, status });
     return this.#findAndCountAll(baseQuery, userId);
   }
 

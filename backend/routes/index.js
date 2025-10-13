@@ -13,7 +13,7 @@ router.get("/category", categoryController.getAll);
 router.get("/user", authMiddleware(), usersController.getCurrentUser);
 router.get("/user/:id", usersController.getUserData);
 
-router.get("/music", authMiddleware(true), musicController.getAll);
+router.get("/music", authMiddleware(true), musicController.getCards);
 router.post("/music", authMiddleware(), upload.single("audio"), musicController.uploadCard);
 router.post("/music/:id", authMiddleware(), roleMiddleware(Roles.ADMIN), musicController.update);
 router.get("/music/:id/download", musicController.download);
