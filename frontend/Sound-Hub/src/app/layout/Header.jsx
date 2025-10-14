@@ -2,8 +2,8 @@ import { Typography, Button, Navbar, IconButton, Drawer } from "@material-tailwi
 import SafeArea from "./SafeArea";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavList from "../navbar/AvatarMenu";
-import { useAuth } from "../auth/AuthProvider";
+import NavList from "../../features/search/AvatarMenu";
+import { useAuth } from "../providers/AuthProvider";
 
 const WITH_THRESHOLD = 960;
 
@@ -36,7 +36,7 @@ export default function Header() {
 
     return (
         <>
-            <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none p-0 py-2">
+            <Navbar className="sticky top-0 z-50 h-max max-w-full rounded-none p-0 py-2">
                 <SafeArea>
                     <div className="flex justify-between items-center">
                         <Typography

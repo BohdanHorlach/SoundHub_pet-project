@@ -9,7 +9,7 @@ import CategoryList from "./CategoryList";
 import { SoundWave, SoundWaveProvider } from "./SoundWave";
 import MusicCardModal from "./MusicCardModal";
 import CardControls from "./CardControls";
-import { useMusicCardActions } from "../../hooks/presenters/useMusicCardActions";
+import { useMusicCardActions } from "../hooks/useMusicCardActions";
 
 
 export default function MusicCard({ card, onPlay = () => { } }) {

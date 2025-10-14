@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import axiosInstance from "../../utils/api/axios-instance";
+import axiosInstance from "../../../utils/api/axios-instance";
 
 let cachedCategories = null;
 let inFlightPromise = null;

@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { Link, useLocation } from "react-router-dom";
-import useSession from "../../hooks/api/useSession";
+import useSession from "../auth/useSession";
 import { ArrowUpCircleIcon, HeartIcon, PowerIcon, ShieldCheckIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 

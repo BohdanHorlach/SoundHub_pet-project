@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../../utils/api/axios-instance";
+import axiosInstance from "../../../utils/api/axios-instance";
 
 
 export function useCards(type = "all", searchParams) {

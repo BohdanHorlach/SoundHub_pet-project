@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { updateCardStatus } from "../../utils/api/moderateApi";
+import { updateCardStatus } from "../api/moderateApi";
 
 
 export function useModerateActions({ selectedCard, hideCardFromList, brodcarsCardRemoved }) {

@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, forwardRef, useEffect, useRef, useState } from "react";
-import { useCategories } from "../../hooks/api/useCategories";
-import SingleLineInput from "../common/SingleLineInput";
-import MultiChooseSelector from "../common/MultiChooseSelector";
+import { useCategories } from "../hooks/useCategories";
+import SingleLineInput from "../../search/SingleLineInput";
+import MultiChooseSelector from "../../search/MultiChooseSelector";
 
 
 const CardEditor = forwardRef(({ card, setMessage }, ref) => {

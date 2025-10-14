@@ -1,4 +1,4 @@
-import axiosInstance from "../../utils/api/axios-instance";
+import axiosInstance from "../../../utils/api/axios-instance";
 
 export async function fetchPendingCards() {
   const res = await axiosInstance.get("/music", {

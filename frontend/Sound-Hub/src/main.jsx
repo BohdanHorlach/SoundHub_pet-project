@@ -3,7 +3,7 @@ import { ThemeProvider } from "@material-tailwind/react";
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
-import { AuthProvider } from './components/auth/AuthProvider.jsx';
+import { AuthProvider } from './app/providers/AuthProvider';
 import React from 'react';
 
 

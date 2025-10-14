@@ -1,14 +1,14 @@
-import RequiredRole from "../components/auth/RequiredRole";
-import { useAuth } from "../components/auth/AuthProvider";
-import CardEditor from "../components/card/CardEditor";
-import { SoundWave, PlayButton, SoundWaveProvider } from "../components/card/SoundWave";
-import ConfirmationModal from "../components/common/ConfirmationModal";
-import AvatarStack from "../components/moderation/AvatarStack";
-import { useModeratedCards } from "../hooks/presenters/useModeratedCards";
-import { useModerateActions } from "../hooks/api/useModerateActions";
+import RequiredRole from "../features/auth/RequiredRole";
+import { useAuth } from "../app/providers/AuthProvider";
+import CardEditor from "../features/cards/components/CardEditor";
+import { SoundWave, PlayButton, SoundWaveProvider } from "../features/cards/components/SoundWave";
+import ConfirmationModal from "../features/search/ConfirmationModal";
+import AvatarStack from "../features/moderation/components/AvatarStack";
+import { useModeratedCards } from "../features/moderation/hooks/useModeratedCards";
+import { useModerateActions } from "../features/moderation/hooks/useModerateActions";
 import { useState } from "react";
-import Header from "../components/common/Header";
-import SafeArea from "../components/common/SafeArea";
+import Header from "../app/layout/Header";
+import SafeArea from "../app/layout/SafeArea";
 
 
 export default function AdminPanel() {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCategories } from "../../hooks/api/useCategories";
+import { useCategories } from "../cards/hooks/useCategories";
 import { useSearchParams } from "react-router-dom";
 import { Button, Collapse, Input, Typography } from "@material-tailwind/react";
 import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";

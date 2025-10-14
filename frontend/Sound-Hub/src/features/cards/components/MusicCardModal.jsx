@@ -10,7 +10,7 @@ import CategoryList from "./CategoryList";
 import { SoundWave, SoundWaveProvider } from "./SoundWave";
 import CardControls from "./CardControls";
 import { motion } from "framer-motion";
-import useUserById from "../../hooks/api/useUserById";
+import useUserById from "../../auth/useUserById";
 
 
 export default function MusicCardModal({

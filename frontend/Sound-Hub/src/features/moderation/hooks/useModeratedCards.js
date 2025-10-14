@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchPendingCards } from "../../utils/api/moderateApi";
-import useWebSocket from "../api/useWebScket";
+import { fetchPendingCards } from "../../moderation/api/moderateApi";
+import useWebSocket from "./useWebScket";
 
 
 export function useModeratedCards({ isAuth, loading, token }) {

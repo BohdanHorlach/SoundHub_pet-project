@@ -1,7 +1,7 @@
 import { Typography } from "@material-tailwind/react";
-import Header from "../components/common/Header";
-import SafeArea from "../components/common/SafeArea";
-import AudioUploadForm from "../components/upload form/AudioUploadForm";
+import Header from "../app/layout/Header";
+import SafeArea from "../app/layout/SafeArea";
+import AudioUploadForm from "../features/upload/components/AudioUploadForm";
 
 
 export default function UploadPage() {

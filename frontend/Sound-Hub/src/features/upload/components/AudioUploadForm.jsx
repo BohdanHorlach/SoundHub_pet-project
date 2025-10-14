@@ -1,14 +1,14 @@
 import React, { useRef, useState } from "react";
-import CardEditor from "../card/CardEditor";
+import CardEditor from "../../cards/components/CardEditor";
 import { Button, Typography } from "@material-tailwind/react";
 import AudioDropzone from "./AudioDropzone";
-import { useUploadActions } from "../../hooks/presenters/useUploadActions";
-import MusicCardModal from "../card/MusicCardModal";
-import useSession from "../../hooks/api/useSession";
+import { useUploadActions } from "../hooks/useUploadActions";
+import MusicCardModal from "../../cards/components/MusicCardModal";
+import { useAuth } from "../../../app/providers/AuthProvider";
 
 
 function AudioUploadForm() {
-  const { user } = useSession();
+  const { user } = useAuth();
   const cardEditorRef = useRef();
   const [previewOpen, setPreviewOpen] = useState(false);
 

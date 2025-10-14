@@ -1,9 +1,9 @@
-import Header from "../components/common/Header";
-import SafeArea from "../components/common/SafeArea";
+import Header from "../app/layout/Header";
+import SafeArea from "../app/layout/SafeArea";
 import { useSearchParams } from "react-router-dom";
-import SearchForm from "../components/common/SearchForm";
-import CardList from "../components/card/CardList";
-import { useCards } from "../hooks/api/useCards";
+import SearchForm from "../features/search/SearchForm";
+import CardList from "../features/cards/components/CardList";
+import { useCards } from "../features/cards/hooks/useCards";
 import { Tab, TabPanel, Tabs, TabsBody, TabsHeader } from "@material-tailwind/react";
 
 

@@ -1,9 +1,9 @@
-import SafeArea from '../components/common/SafeArea';
-import Header from '../components/common/Header'
-import CardList from '../components/card/CardList';
+import SafeArea from '../app/layout/SafeArea';
+import Header from '../app/layout/Header'
+import CardList from '../features/cards/components/CardList';
 import { useSearchParams } from 'react-router-dom';
-import SearchForm from '../components/common/SearchForm';
-import { useCards } from '../hooks/api/useCards';
+import SearchForm from '../features/search/SearchForm';
+import { useCards } from '../features/cards/hooks/useCards';
 
 
 export default function HomePage() {
