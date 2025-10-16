@@ -1,0 +1,22 @@
+# Stage 1: build
+FROM node:20.14.0-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache ffmpeg
+COPY package*.json ./
+
+RUN npm ci --omit=dev
+
+COPY . .
+
+# Stage 2: runtime
+FROM node:20.14.0-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+EXPOSE 5000 5001
+
+CMD npm run start

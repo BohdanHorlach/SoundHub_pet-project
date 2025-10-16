@@ -15,6 +15,7 @@ async function authenticateUserByToken(token) {
     user = await User.create({
       firebaseUid: uid,
       name: decodedToken.name || "Unnamed",
+      avatar: decodedToken.picture || null,
     });
   }
 

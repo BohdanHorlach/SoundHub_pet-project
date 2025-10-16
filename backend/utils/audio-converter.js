@@ -1,6 +1,7 @@
 const Ffmpeg = require("fluent-ffmpeg");
 
 class AudioConverter{
+
   async convertToMp3(inputPath, outputPath, format) {
     await new Promise((resolve, reject) => {
       Ffmpeg(inputPath)

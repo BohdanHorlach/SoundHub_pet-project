@@ -4,6 +4,7 @@ const cors = require('cors');
 const router = require('./routes/index');
 const exeptionTracker = require('./middlewares/exeption-tracker');
 const { initDB } = require('./models');
+const sequelize = require('./db');
 const { tempFileCleaner, rejectedCardsCleaner } = require('./config/cleaners-config');
 const initWebSocketServer = require('./ws/web-socket-server');
 
@@ -28,11 +29,21 @@ app.use('/api', router);
 app.use(exeptionTracker); //errors proccessing
 
 
-initDB(app);
-initWebSocketServer(app);
-tempFileCleaner.start();
-rejectedCardsCleaner.start();
+(async () => {
+  try {
+    console.log('Waiting for database connection...');
+    await sequelize.authenticate();
+    console.log('Database is ready');
 
+    initDB(app);
+    initWebSocketServer(app);
+    tempFileCleaner.start();
+    rejectedCardsCleaner.start();
+  } catch (err) {
+    console.error('Unable to connect to the database:', err);
+    process.exit(1);
+  }
+})();
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);

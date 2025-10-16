@@ -7,6 +7,9 @@ const Favorite = sequelize.define('Favorite', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   userId: { type: DataTypes.INTEGER, allowNull: false },
   musicCardId: { type: DataTypes.INTEGER, allowNull: false },
+}, {
+  tableName: 'Favorites',
+  timestamps: true,
 });
 
 User.belongsToMany(MusicCard, { through: Favorite, foreignKey: 'userId', as: 'favorites' });

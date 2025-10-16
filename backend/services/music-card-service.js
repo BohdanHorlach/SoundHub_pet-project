@@ -38,11 +38,11 @@ class MusicCardService {
   #buildCategoriesFilter(categories) {
     return {
       [Op.in]: Sequelize.literal(`(
-        SELECT musicCardId
-        FROM categorymusics
-        WHERE categoryId IN (${categories.join(',')})
-        GROUP BY musicCardId
-        HAVING COUNT(DISTINCT categoryId) = ${categories.length}
+        SELECT "musicCardId"
+        FROM "CategoryMusics"
+        WHERE "categoryId" IN (${categories.join(',')})
+        GROUP BY "musicCardId"
+        HAVING COUNT(DISTINCT "categoryId") = ${categories.length}
       )`)
     };
   }

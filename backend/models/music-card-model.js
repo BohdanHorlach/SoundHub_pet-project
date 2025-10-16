@@ -13,6 +13,9 @@ const MusicCard = sequelize.define('MusicCard', {
     defaultValue: MusicCardStatus.PENDING
   },
   authorId: { type: DataTypes.INTEGER, allowNull: false },
+}, {
+  tableName: 'MusicCards',
+  timestamps: true,
 });
 
 MusicCard.belongsTo(User, { foreignKey: 'authorId', as: 'author' });

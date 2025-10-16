@@ -1,0 +1,14 @@
+services:
+  server:
+    build: 
+       context: ./backend
+       dockerfile: Dockerfile
+    container_name: soundhub-server
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    restart: always

@@ -5,6 +5,9 @@ const MusicCard = require('./music-card-model');
 
 const CategoryMusic = sequelize.define('CategoryMusic', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+}, {
+  tableName: 'CategoryMusics',
+  timestamps: true,
 });
 
 Category.belongsToMany(MusicCard, { through: CategoryMusic, foreignKey: 'categoryId' });
