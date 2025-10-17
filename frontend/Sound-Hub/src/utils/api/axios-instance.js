@@ -1,8 +1,10 @@
 import axios from "axios";
 import { auth } from "../firebase/firebase-config";
 
+const baseURL = import.meta.env.VITE_MODE === "dev" ? "/api" : import.meta.env.VITE_BACKEND_URL + '/api';
+
 const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL,
 });
 
 

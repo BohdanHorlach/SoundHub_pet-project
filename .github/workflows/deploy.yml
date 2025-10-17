@@ -1,9 +1,6 @@
 name: Deploy to Cloud Run
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -29,7 +26,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker compose -f docker-compose.yml build server
+          docker compose build server
 
 
       - name: Push Docker image
@@ -47,8 +44,17 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          install_components: "beta,run"
+          install_components: "beta"
 
+      - name: Create env file
+        run: |
+          echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DB_DIALECT=${{ secrets.DB_DIALECT }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "FIREBASE_ADMIN_KEY_JSON=${{ secrets.FIREBASE_ADMIN_KEY_JSON }}" >> .env
 
       - name: Deploy to Cloud Run
         run: |
@@ -57,10 +63,4 @@ jobs:
             --platform=managed \
             --region=$REGION \
             --allow-unauthenticated \
-            --set-env-vars CLIENT_URL=${{ secrets.CLIENT_URL }},\
-DB_HOST=${{ secrets.DB_HOST }},\
-DB_PORT=${{ secrets.DB_PORT }},\
-DB_DIALECT=${{ secrets.DB_DIALECT }},\
-DB_USER=${{ secrets.DB_USER }},\
-DB_PASSWORD=${{ secrets.DB_PASSWORD }},\
-FIREBASE_ADMIN_KEY_JSON=${{ secrets.FIREBASE_ADMIN_KEY_JSON }}
+            --env-vars-file .env
