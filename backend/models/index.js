@@ -4,14 +4,10 @@ const MusicCard = require('./music-card-model');
 const Category = require('./category-model');
 const CategoryMusic = require('./category-music-model');
 const Favorite = require('./favorite-model');
-const PORT = process.env.PORT;
 
-const initDB = async (app) => {
+const initDB = async () => {
   try {
     await sequelize.sync();
-    console.log('Database synchronized.');
-
-    app.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`))
   } catch (error) {
     console.log(error);
   }

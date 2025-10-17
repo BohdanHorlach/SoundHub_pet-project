@@ -19,8 +19,7 @@ function onMessage(msg, client, wss) {
 }
 
 
-function initWebSocketServer(app) {
-  const server = app.listen(process.env.WEB_SOCKET_PORT, () => console.log(`Web Socket Server started on port ${process.env.WEB_SOCKET_PORT}`));
+function initWebSocketServer(server) {
   const wss = new WebSocketServer({ server });
 
   wss.on("connection", async (client, request) => {

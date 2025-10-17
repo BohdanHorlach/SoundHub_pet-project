@@ -56,7 +56,7 @@ export function useUploadActions() {
     if (!validateForm(cardEditorRef)) 
       return;
 
-    const loadingToast = toast.loading("Uploading audio...");
+    const loadingToast = toast.loading("Uploading audio...", { duration: 2 * 60 * 1000 });
 
     try {
       const { status, data } = await axiosInstance.post("/music", getFormData(cardEditorRef), {

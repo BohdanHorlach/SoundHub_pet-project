@@ -1,0 +1,66 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: bohdanhorlach/soundhub_pet-project-server
+      REGION: europe-central2
+      SERVICE_NAME: soundhub-server
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+
+      - name: Build Docker image
+        run: |
+          docker compose -f docker-compose.yml build server
+
+
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_NAME:latest
+
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          install_components: "beta,run"
+
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image=docker.io/$IMAGE_NAME:latest \
+            --platform=managed \
+            --region=$REGION \
+            --allow-unauthenticated \
+            --set-env-vars CLIENT_URL=${{ secrets.CLIENT_URL }},\
+DB_HOST=${{ secrets.DB_HOST }},\
+DB_PORT=${{ secrets.DB_PORT }},\
+DB_DIALECT=${{ secrets.DB_DIALECT }},\
+DB_USER=${{ secrets.DB_USER }},\
+DB_PASSWORD=${{ secrets.DB_PASSWORD }},\
+FIREBASE_ADMIN_KEY_JSON=${{ secrets.FIREBASE_ADMIN_KEY_JSON }}

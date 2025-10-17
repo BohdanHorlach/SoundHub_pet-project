@@ -1,0 +1,4 @@
+[build]
+  base = "frontend/Sound-Hub"
+  publish = "dist"
+  command = "npm run build"

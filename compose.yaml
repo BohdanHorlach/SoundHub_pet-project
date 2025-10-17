@@ -3,12 +3,12 @@ services:
     build: 
        context: ./backend
        dockerfile: Dockerfile
+    image: bohdanhorlach/soundhub_pet-project-server:latest
     container_name: soundhub-server
     volumes:
       - ./backend:/app
     env_file:
       - ./backend/.env
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "8080:8080"
     restart: always

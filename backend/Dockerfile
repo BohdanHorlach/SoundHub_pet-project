@@ -3,7 +3,6 @@ FROM node:20.14.0-alpine AS builder
 
 WORKDIR /app
 
-RUN apk add --no-cache ffmpeg
 COPY package*.json ./
 
 RUN npm ci --omit=dev
@@ -15,8 +14,10 @@ FROM node:20.14.0-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache ffmpeg
+
 COPY --from=builder /app /app
 
-EXPOSE 5000 5001
+EXPOSE 8080
 
 CMD npm run start

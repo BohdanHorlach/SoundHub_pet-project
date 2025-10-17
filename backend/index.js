@@ -31,12 +31,14 @@ app.use(exeptionTracker); //errors proccessing
 
 (async () => {
   try {
+    const server = app.listen(process.env.PORT, '0.0.0.0', () => console.log(`Server started on PORT: ${process.env.PORT}`));
+
     console.log('Waiting for database connection...');
     await sequelize.authenticate();
     console.log('Database is ready');
 
-    initDB(app);
-    initWebSocketServer(app);
+    initDB().then(() => console.log('Database synchronized.'));
+    initWebSocketServer(server);
     tempFileCleaner.start();
     rejectedCardsCleaner.start();
   } catch (err) {
