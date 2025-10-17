@@ -14,14 +14,28 @@ export function useMusicCardActions(card) {
 
   const onReady = () => setIsFavorite(card.isOnFavorite);
 
-  const addToFavorite = async (cardId) => {
+
+  const addToFavorite = async () => {
     try {
-      await axiosInstance.post(`/favorite/${cardId}`);
+      await axiosInstance.post(`/favorite/${card.id}`);
       setIsFavorite((prev) => !prev);
     } catch (error) {
       ensureAuth(error);
     }
   };
+
+
+  const downloadCard = async () => {
+    try {
+      const response = await axiosInstance.get(`/music/${card.id}/download`);
+      const { url } = response.data;
+
+      window.open(url, "_blank");
+    } catch (error) {
+      ensureAuth(error);
+    }
+  }
+
 
   return {
     isFavorite,
@@ -29,5 +43,6 @@ export function useMusicCardActions(card) {
     setOpenDetails,
     addToFavorite,
     onReady,
+    downloadCard
   };
 }

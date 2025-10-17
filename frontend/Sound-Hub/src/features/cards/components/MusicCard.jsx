@@ -19,6 +19,7 @@ export default function MusicCard({ card, onPlay = () => { } }) {
     setOpenDetails,
     addToFavorite,
     onReady,
+    downloadCard
   } = useMusicCardActions(card);
 
   const VISIBLE_CATEGORIES_COUNT = 3;
@@ -46,11 +47,11 @@ export default function MusicCard({ card, onPlay = () => { } }) {
           <CardFooter className="pt-0 w-[100%]">
             <CardControls
               isFavorite={isFavorite}
-              onToggleFavorite={() => addToFavorite(card.id)}
+              onToggleFavorite={addToFavorite}
               onPlay={onPlay}
               audioUrl={card.audioUrl}
               title={card.title}
-              downloadUrl={`/api/music/${card.id}/download`}
+              onDownload={downloadCard}
               canDownload
               compact
             />
@@ -64,7 +65,7 @@ export default function MusicCard({ card, onPlay = () => { } }) {
         isFavorite={isFavorite}
         onToggleFavorite={addToFavorite}
         onPlay={onPlay}
-        downloadUrl={`/api/music/${card.id}/download`}
+        onDownload={downloadCard}
         canDownload
       />
     </>

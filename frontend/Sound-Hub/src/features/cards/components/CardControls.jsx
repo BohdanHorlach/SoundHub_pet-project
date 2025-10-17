@@ -9,10 +9,16 @@ export default function CardControls({
   onToggleFavorite,
   onPlay,
   title,
-  downloadUrl,
+  onDownload,
   canDownload = false,
   compact = false,
 }) {
+
+
+  const handleDownload = () => {
+    if (canDownload)
+      onDownload();
+  };
 
 
   return (
@@ -30,7 +36,7 @@ export default function CardControls({
         <PlayButton onPlay={onPlay} />
       </div>
 
-      <a className="flex w-[30%]" href={canDownload ? downloadUrl : undefined} download={`${title}.mp3`}>
+      <a className="flex w-[30%]" onClick={handleDownload}>
         <Button className="w-full flex justify-center">
           <span>
             <ArrowDownCircleIcon className="size-6 text-white" />

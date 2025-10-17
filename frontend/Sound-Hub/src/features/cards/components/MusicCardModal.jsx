@@ -20,7 +20,7 @@ export default function MusicCardModal({
   isFavorite,
   onToggleFavorite,
   onPlay,
-  downloadUrl,
+  onDownload,
   canDownload = false,
   actionButton
 }) {
@@ -49,11 +49,11 @@ export default function MusicCardModal({
                 <div className="h-[20%]">
                   <CardControls
                     isFavorite={isFavorite}
-                    onToggleFavorite={() => onToggleFavorite(card.id)}
+                    onToggleFavorite={onToggleFavorite}
                     onPlay={onPlay}
                     audioUrl={card.audioUrl}
                     title={card.title}
-                    downloadUrl={downloadUrl}
+                    onDownload={onDownload}
                     canDownload={canDownload}
                   />
                 </div>

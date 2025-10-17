@@ -68,7 +68,7 @@ class MusicCardController {
     try {
       const { id } = req.params;
       const url = await musicCardService.getSignedDownloadUrl(id);
-      res.redirect(url);
+      res.status(200).json({ url });
     } catch (error) {
       console.error(error);
       next(UnenspectedError(`Download failed: ${error.message}`));
