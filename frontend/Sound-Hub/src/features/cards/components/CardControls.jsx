@@ -23,7 +23,7 @@ export default function CardControls({
 
   return (
     <div onClick={(e) => e.stopPropagation()} className={`flex ${compact ? "gap-1" : "gap-4 mt-auto"} justify-between`}>
-      <Button onClick={onToggleFavorite} className="flex w-[30%] justify-center">
+      <Button onClick={onToggleFavorite} className="flex flex-shrink-0 justify-center w-[30%]">
         <span>
           <FavoriteIcon
             isFavorite={isFavorite}
@@ -32,11 +32,11 @@ export default function CardControls({
         </span>
       </Button>
 
-      <div onClick={(e) => e.stopPropagation()} className="flex w-[50%]">
+      <div onClick={(e) => e.stopPropagation()} className="flex flex-shrink w-[40%]">
         <PlayButton onPlay={onPlay} />
       </div>
 
-      <a className="flex w-[30%]" onClick={handleDownload}>
+      <a className="flex flex-shrink-0 w-[30%]" onClick={handleDownload}>
         <Button className="w-full flex justify-center">
           <span>
             <ArrowDownCircleIcon className="size-6 text-white" />

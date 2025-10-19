@@ -49,7 +49,7 @@ function AudioUploadForm() {
 
   return (
     <div className="flex items-center justify-center">
-      <div style={{ maxWidth: 400, margin: "auto" }}>
+      <div className='xl:w-1/3 md:w-1/2 w-11/12'>
         <CardEditor setMessage={setMessage} ref={cardEditorRef} />
 
         <div className="my-8">

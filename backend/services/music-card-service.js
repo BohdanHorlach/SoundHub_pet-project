@@ -70,6 +70,7 @@ class MusicCardService {
           through: { attributes: [] },
         },
       ],
+      distinct: true
     };
 
     return query;
