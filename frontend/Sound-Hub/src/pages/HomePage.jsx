@@ -9,7 +9,7 @@ import { Pagination } from '../features/search/Pagination';
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { cards, pagination, loading, fetchCards } = useCards("all", searchParams);
+  const { cards, pagination, loading } = useCards("all", searchParams);
 
 
   const handlePageChange = (newPage) => {
@@ -23,7 +23,7 @@ export default function HomePage() {
     <>
       <Header />
       <SafeArea className="xl:py-12 lg:py-12 md:py-8 py-4 bg-background">
-        <SearchForm onSearch={fetchCards} />
+        <SearchForm />
         <CardList cards={cards} loading={loading} />
 
         {!loading && pagination.totalPages > 1 && (

@@ -6,7 +6,7 @@ import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import CategoryGrid from "./CategoryGrid";
 
 
-export default function SearchForm({ onSearch }) {
+export default function SearchForm() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTitle = searchParams.get("title") || "";
   const initialCategories = JSON.parse(searchParams.get("categories") || "[]");
@@ -26,7 +26,6 @@ export default function SearchForm({ onSearch }) {
       params.categories = JSON.stringify(selectedCategories);
 
     setSearchParams(params);
-    onSearch({ title, categories: selectedCategories });
   };
 
 

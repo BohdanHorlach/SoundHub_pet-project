@@ -27,7 +27,7 @@ class MusicCardService {
 
     if (cardName) {
       where.title = {
-        [Op.like]: `%${cardName}%`
+        [Op.iLike]: `%${cardName}%`
       };
     }
 
@@ -56,7 +56,7 @@ class MusicCardService {
     if(categories.length > 0){
       where.id = this.#buildCategoriesFilter(categories);
     }
-    
+
     const query = {
       limit: Number(limit),
       offset: Number(offset),

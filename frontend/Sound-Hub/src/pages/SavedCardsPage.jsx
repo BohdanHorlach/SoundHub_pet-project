@@ -9,20 +9,15 @@ import { Tab, TabPanel, Tabs, TabsBody, TabsHeader } from "@material-tailwind/re
 
 export default function SavedCardsPage() {
   const [searchParams] = useSearchParams();
-  const { cards: favoriteCards, loading: favoriteLoading, fetchCards: fetchFavoriteCards } = useCards("favorite", searchParams);
-  const { cards: uploadsCards, loading: uploadsLoading, fetchCards: fetchUploadsCards } = useCards("uploads", searchParams);
-
-  const fetchCards = () => {
-    fetchFavoriteCards();
-    fetchUploadsCards();
-  };
+  const { cards: favoriteCards, loading: favoriteLoading } = useCards("favorite", searchParams);
+  const { cards: uploadsCards, loading: uploadsLoading } = useCards("uploads", searchParams);
 
 
   return (
     <>
       <Header />
       <SafeArea className="xl:py-12 lg:py-12 md:py-8 py-4 bg-background">
-        <SearchForm onSearch={fetchCards} />
+        <SearchForm />
         <Tabs value="favorite">
           <TabsHeader>
             <Tab value={"favorite"}>Favorite</Tab>
