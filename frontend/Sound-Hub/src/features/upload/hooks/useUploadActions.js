@@ -70,7 +70,7 @@ export function useUploadActions() {
         setFile(null);
         cardEditorRef.current?.clear();
       } else {
-        toast.error(data.message || "Upload failed.", { duration: TOAST_HIDE_DURATION });
+        toast.error(data.message || `Upload failed`, { duration: TOAST_HIDE_DURATION });
       }
     } catch (error) {
       toast.dismiss(loadingToast);
