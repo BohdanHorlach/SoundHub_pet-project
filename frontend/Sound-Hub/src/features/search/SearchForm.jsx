@@ -25,6 +25,7 @@ export default function SearchForm() {
     if (selectedCategories.length > 0)
       params.categories = JSON.stringify(selectedCategories);
 
+    setOpenCategories(false);
     setSearchParams(params);
   };
 

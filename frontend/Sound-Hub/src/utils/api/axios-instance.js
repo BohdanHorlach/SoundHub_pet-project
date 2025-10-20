@@ -24,12 +24,9 @@ axiosInstance.interceptors.request.use(async (config) => {
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("Axios Response:", response);
     return response;
   },
   (error) => {
-    console.log(error.response);
-    console.error("Axios Error:", error);
     return Promise.reject(error);
   }
 );
