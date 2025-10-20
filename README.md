@@ -33,3 +33,25 @@ SoundHub is a full-stack web application for discovering, uploading, and managin
 ## Skills Demonstrated
 
 Full-stack development, React, Node.js, REST API design, WebSocket, PostgreSQL, Firebase, Ffmpeg audio processing, Docker, CI/CD, Responsive UI, State management
+
+
+## 🖼️ Visualization
+
+### 🎧 Home Page
+Interactive audio cards with waveform visualization, filters, and search.
+
+![SoundHub Home Page](assets/vizualization/Sound-Hub_home_page.gif)
+
+---
+
+### 🔊 Upload Form
+Audio upload form with category selection, title input, and toast notifications.
+
+![SoundHub Upload Form](assets/vizualization/Sound-Hub_upload_form.gif)
+
+---
+
+### 🛠️ Admin Panel
+Real-time moderation interface with WebSocket updates and editing capabilities.
+
+![SoundHub Admin Panel](assets/vizualization/Sound-Hub_admin_panel.gif)
