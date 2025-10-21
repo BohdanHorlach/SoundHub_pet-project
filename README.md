@@ -40,18 +40,18 @@ Full-stack development, React, Node.js, REST API design, WebSocket, PostgreSQL, 
 ### 🎧 Home Page
 Interactive audio cards with waveform visualization, filters, and search.
 
-![SoundHub Home Page](assets/vizualization/Sound-Hub_home_page.gif)
+![SoundHub Home Page](assets/visualization/Sound-Hub_home_page.gif)
 
 ---
 
 ### 🔊 Upload Form
 Audio upload form with category selection, title input, and toast notifications.
 
-![SoundHub Upload Form](assets/vizualization/Sound-Hub_upload_form.gif)
+![SoundHub Upload Form](assets/visualization/Sound-Hub_upload_form.gif)
 
 ---
 
 ### 🛠️ Admin Panel
 Real-time moderation interface with WebSocket updates and editing capabilities.
 
-![SoundHub Admin Panel](assets/vizualization/Sound-Hub_admin_panel.gif)
+![SoundHub Admin Panel](assets/visualization/Sound-Hub_admin_panel.gif)
